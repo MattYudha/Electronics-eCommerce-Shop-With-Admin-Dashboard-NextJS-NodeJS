@@ -2,7 +2,7 @@
 import { CustomButton, DashboardSidebar, SectionTitle } from "@/components";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import React, { useEffect, useState, use } from "react";
+import React, { useEffect, useState, use, useCallback } from "react";
 import toast from "react-hot-toast";
 import {
   convertCategoryNameToURLFriendly as convertSlugToURLFriendly,
@@ -104,7 +104,7 @@ const DashboardProductDetails = ({ params }: DashboardProductDetailsProps) => {
   };
 
   // fetching main product data including other product images
-  const fetchProductData = async () => {
+  const fetchProductData = useCallback(async () => {
     apiClient
       .get(`/api/products/${id}`)
       .then((res) => {
@@ -119,10 +119,10 @@ const DashboardProductDetails = ({ params }: DashboardProductDetailsProps) => {
     });
     const images = await imagesData.json();
     setOtherImages((currentImages) => images);
-  };
+  }, [id]);
 
   // fetching all product categories. It will be used for displaying categories in select category input
-  const fetchCategories = async () => {
+  const fetchCategories = useCallback(async () => {
     apiClient
       .get(`/api/categories`)
       .then((res) => {
@@ -131,12 +131,12 @@ const DashboardProductDetails = ({ params }: DashboardProductDetailsProps) => {
       .then((data) => {
         setCategories(data);
       });
-  };
+  }, []);
 
   useEffect(() => {
     fetchCategories();
     fetchProductData();
-  }, [id]);
+  }, [fetchCategories, fetchProductData]);
 
   return (
     <div className="bg-white flex justify-start max-w-screen-2xl mx-auto xl:h-full max-xl:flex-col max-xl:gap-y-5">

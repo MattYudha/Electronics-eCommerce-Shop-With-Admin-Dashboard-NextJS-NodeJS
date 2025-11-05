@@ -9,7 +9,7 @@ export const apiClient = {
     const defaultOptions: RequestInit = {
       headers: {
         'Content-Type': 'application/json',
-        ...options.headers,
+        ...(options.headers || {} as Record<string, string>),
       },
     };
     

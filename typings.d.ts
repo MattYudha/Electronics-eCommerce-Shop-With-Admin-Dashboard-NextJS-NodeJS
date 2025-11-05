@@ -8,7 +8,7 @@ interface Product {
   mainImage: string;
   manufacturer: string;
   categoryId: string;
-  category: {name: string}?;
+  category: { name: string } | null;
   inStock: number;
 }
 

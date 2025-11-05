@@ -4,7 +4,7 @@ import apiClient from "@/lib/api";
 import { convertCategoryNameToURLFriendly as convertSlugToURLFriendly } from "@/utils/categoryFormating";
 import { sanitizeFormData } from "@/lib/form-sanitize";
 import Image from "next/image";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import toast from "react-hot-toast";
 
 const AddNewProduct = () => {
@@ -78,19 +78,19 @@ const AddNewProduct = () => {
     }
   };
 
-  const fetchMerchants = async () => {
+  const fetchMerchants = useCallback(async () => {
     try {
       const res = await apiClient.get("/api/merchants");
       const data: Merchant[] = await res.json();
       setMerchants(data || []);
       setProduct((prev) => ({
-      ...prev,
+        ...prev,
         merchantId: prev.merchantId || data?.[0]?.id || "",
       }));
     } catch (e) {
       toast.error("Failed to load merchants");
     }
-  };
+  }, []);
 
   const uploadFile = async (file: any) => {
     const formData = new FormData();
@@ -112,7 +112,7 @@ const AddNewProduct = () => {
     }
   };
 
-  const fetchCategories = async () => {
+  const fetchCategories = useCallback(async () => {
     apiClient
       .get(`/api/categories`)
       .then((res) => {
@@ -120,8 +120,8 @@ const AddNewProduct = () => {
       })
       .then((data) => {
         setCategories(data);
-        setProduct({
-          merchantId: product.merchantId || "",
+        setProduct((prevProduct) => ({
+          merchantId: prevProduct.merchantId || "",
           title: "",
           price: 0,
           manufacturer: "",
@@ -130,14 +130,14 @@ const AddNewProduct = () => {
           description: "",
           slug: "",
           categoryId: data[0]?.id,
-        });
+        }));
       });
-  };
+  }, []);
 
   useEffect(() => {
     fetchCategories();
     fetchMerchants();
-  }, []);
+  }, [fetchCategories, fetchMerchants]);
 
   return (
     <div className="bg-white flex justify-start max-w-screen-2xl mx-auto xl:h-full max-xl:flex-col max-xl:gap-y-5">

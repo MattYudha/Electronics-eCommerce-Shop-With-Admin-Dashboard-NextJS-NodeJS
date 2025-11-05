@@ -4,6 +4,7 @@ import { isValidEmailAddressFormat } from "@/lib/utils";
 import React, { useState } from "react";
 import toast from "react-hot-toast";
 import { sanitizeFormData } from "@/lib/form-sanitize";
+import apiClient from "@/lib/api"; // Added apiClient import
 
 const DashboardCreateNewUser = () => {
   const [userInput, setUserInput] = useState<{
@@ -17,55 +18,39 @@ const DashboardCreateNewUser = () => {
   });
 
   const addNewUser = async () => {
+    // Simplified validation checks
     if (userInput.email === "" || userInput.password === "") {
-      toast.error("You must enter all input values to add a user");
-      return;
+      return toast.error("You must enter all input values to add a user");
+    }
+    if (!isValidEmailAddressFormat(userInput.email)) {
+      return toast.error("You entered invalid email address format");
+    }
+    if (userInput.password.length <= 7) {
+      return toast.error("Password must be longer than 7 characters");
     }
 
-    // Sanitize form data before sending to API
-    const sanitizedUserInput = sanitizeFormData(userInput);
+    try {
+      // Sanitize form data before sending to API
+      const sanitizedUserInput = sanitizeFormData(userInput);
 
-    if (
-      userInput.email.length > 3 &&
-      userInput.role.length > 0 &&
-      userInput.password.length > 0
-    ) {
-      if (!isValidEmailAddressFormat(userInput.email)) {
-        toast.error("You entered invalid email address format");
-        return;
-      }
+      const response = await apiClient.post(`/api/users`, sanitizedUserInput);
 
-      if (userInput.password.length > 7) {
-        const requestOptions: any = {
-          method: "post",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(sanitizedUserInput),
-        };
-        ap(`/api/users`, requestOptions)
-          .then((response) => {
-            if(response.status === 201){
-              return response.json();
-
-            }else{
-              
-              throw Error("Error while creating user");
-            }
-          })
-          .then((data) => {
-            toast.success("User added successfully");
-            setUserInput({
-              email: "",
-              password: "",
-              role: "user",
-            });
-          }).catch(error => {
-            toast.error("Error while creating user");
-          });
+      if (response.status === 201) {
+        await response.json();
+        toast.success("User added successfully");
+        setUserInput({
+          email: "",
+          password: "",
+          role: "user",
+        });
       } else {
-        toast.error("Password must be longer than 7 characters");
+        // Throw an error to be caught by the catch block
+        const errorData = await response.json().catch(() => null); // Try to get error details
+        throw new Error(errorData?.error || "Error while creating user");
       }
-    } else {
-      toast.error("You must enter all input values to add a user");
+    } catch (error) {
+      console.error("Error creating user:", error);
+      toast.error(error instanceof Error ? error.message : "An unknown error occurred");
     }
   };
 
@@ -113,7 +98,7 @@ const DashboardCreateNewUser = () => {
             </div>
             <select
               className="select select-bordered"
-              defaultValue={userInput.role}
+              value={userInput.role} // Use value instead of defaultValue for controlled component
               onChange={(e) =>
                 setUserInput({ ...userInput, role: e.target.value })
               }
