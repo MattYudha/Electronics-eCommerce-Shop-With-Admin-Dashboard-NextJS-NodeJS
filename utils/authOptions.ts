@@ -2,45 +2,16 @@
 
 
 import type { Session } from "next-auth";
-
 import type { JWT } from "next-auth/jwt";
-
-import NextAuth from "next-auth/next";
-
-interface SignInParams {
-  user: {
-    id: string;
-    name?: string | null;
-    email?: string | null;
-    image?: string | null;
-    role?: string; // Assuming role is part of the user object
-  };
-  account: {
-    provider: string;
-    type: string;
-    id: string;
-    accessToken?: string;
-    refreshToken?: string;
-    expires_at?: number;
-    token_type?: string;
-    scope?: string;
-    id_token?: string;
-    session_state?: string;
-  };
-  profile?: any;
-  email?: { verificationRequest?: boolean };
-  credentials?: Record<string, any>;
-}
-
+import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import GithubProvider from "next-auth/providers/github";
 import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
 import bcrypt from "bcryptjs";
 import prisma from "@/utils/db";
-import { nanoid } from "nanoid";
 
 export const authOptions: any = {
-  // Configure one or more authentication providers
+  adapter: PrismaAdapter(prisma),
   providers: [
     CredentialsProvider({
       id: "credentials",
@@ -50,101 +21,51 @@ export const authOptions: any = {
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials: any) {
-        try {
-          const user = await prisma.user.findFirst({
-            where: {
-              email: credentials.email,
-            },
-          });
-          if (user) {
-            const isPasswordCorrect = await bcrypt.compare(
-              credentials.password,
-              user.password!
-            );
-            if (isPasswordCorrect) {
-              return {
-                id: user.id,
-                email: user.email,
-                role: user.role,
-              };
-            }
-          }
-        } catch (err: any) {
-          throw new Error(err);
+        if (!credentials.email || !credentials.password) {
+          throw new Error("Email and password required");
         }
-        return null;
+
+        const user = await prisma.user.findUnique({
+          where: {
+            email: credentials.email,
+          },
+        });
+
+        if (!user || !user.password) {
+          throw new Error("Invalid credentials");
+        }
+
+        const isPasswordCorrect = await bcrypt.compare(
+          credentials.password,
+          user.password
+        );
+
+        if (!isPasswordCorrect) {
+          throw new Error("Invalid credentials");
+        }
+
+        return user;
       },
     }),
-    // Uncomment and configure these providers as needed
-    // GithubProvider({
-    //   clientId: process.env.GITHUB_ID!,
-    //   clientSecret: process.env.GITHUB_SECRET!,
-    // }),
-    // GoogleProvider({
-    //   clientId: process.env.GOOGLE_CLIENT_ID!,
-    //   clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
-    // }),
+    GithubProvider({
+      clientId: process.env.GITHUB_ID!,
+      clientSecret: process.env.GITHUB_SECRET!,
+    }),
+    GoogleProvider({
+      clientId: process.env.GOOGLE_CLIENT_ID!,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+    }),
   ],
-  
-
   callbacks: {
-    async signIn({ user, account }: SignInParams) {
-      if (account?.provider === "credentials") {
-        return true;
-      }
-      
-      // Handle OAuth providers
-      if (account?.provider === "github" || account?.provider === "google") {
-        try {
-          // Check if user exists in database
-          const existingUser = await prisma.user.findFirst({
-            where: {
-              email: user.email!,
-            },
-          });
-
-          if (!existingUser) {
-            // Create new user for OAuth providers
-            await prisma.user.create({
-              data: {
-                id: nanoid(),
-                email: user.email!,
-                role: "user",
-                // OAuth users don't have passwords
-                password: null,
-              },
-            });
-          }
-          return true;
-        } catch (error) {
-          console.error("Error in signIn callback:", error);
-          return false;
-        }
-      }
-      
-      return true;
-    },
-    async jwt({ token, user }: { token: JWT; user: User }) {
+    async jwt({ token, user }: { token: JWT; user: any }) {
       if (user) {
         token.role = user.role;
         token.id = user.id;
-        token.iat = Math.floor(Date.now() / 1000); // Issued at time
       }
-      
-      // Check if token is expired (15 minutes)
-      const now = Math.floor(Date.now() / 1000);
-      const tokenAge = now - (token.iat as number);
-      const maxAge = 15 * 60; // 15 minutes
-      
-      if (tokenAge > maxAge) {
-        // Token expired, return empty object to force re-authentication
-        return {};
-      }
-      
       return token;
     },
     async session({ session, token }: { session: Session; token: JWT }) {
-      if (token) {
+      if (session.user) {
         session.user.role = token.role as string;
         session.user.id = token.id as string;
       }
@@ -152,16 +73,15 @@ export const authOptions: any = {
     },
   },
   pages: {
-    signIn: '/login',
-    error: '/login', // Redirect to login page on auth errors
+    signIn: "/login",
+    error: "/login", // Redirect to login page on auth errors
   },
   session: {
     strategy: "jwt",
-    maxAge: 15 * 60, // 15 minutes in seconds
-    updateAge: 5 * 60, // Update session every 5 minutes
+    maxAge: 15 * 60, // 15 minutes
   },
   jwt: {
-    maxAge: 15 * 60, // 15 minutes in seconds
+    maxAge: 15 * 60, // 15 minutes
   },
   secret: process.env.NEXTAUTH_SECRET,
   debug: process.env.NODE_ENV === "development",

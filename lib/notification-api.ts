@@ -87,6 +87,19 @@ export const notificationApi = {
   },
 
   /**
+   * Mark all notifications for a user as read
+   */
+  async markAllAsRead(userId: string) {
+    const response = await apiClient.post(`/api/notifications/${userId}/mark-all-read`);
+    
+    if (!response.ok) {
+      throw new Error(`Failed to mark all notifications as read: ${response.statusText}`);
+    }
+    
+    return response.json();
+  },
+
+  /**
    * Delete single notification
    */
   async deleteNotification(id: string, userId: string) {

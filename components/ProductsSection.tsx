@@ -1,49 +1,77 @@
-// *********************
-// Role of the component: products section intended to be on the home page
-// Name of the component: ProductsSection.tsx
-// Developer: Aleksandar Kuzmanovic
-// Version: 1.0
-// Component call: <ProductsSection slug={slug} />
-// Input parameters: no input parameters
-// Output: products grid
-// *********************
+'use client';
 
-import React from "react";
-import ProductItem from "./ProductItem";
+import React, { useState, useEffect } from "react";
+import ProductItem, { Product } from "./ProductItem"; // Import Product type
 import Heading from "./Heading";
 import apiClient from "@/lib/api";
 
-const ProductsSection = async () => {
-  let products = [];
-  
-  try {
-    // sending API request for getting all products
-    const data = await apiClient.get("/api/products");
-    
-    if (!data.ok) {
-      console.error('Failed to fetch products:', data.statusText);
-      products = [];
-    } else {
-      const result = await data.json();
-      // Ensure products is an array
-      products = Array.isArray(result) ? result : [];
-    }
-  } catch (error) {
-    console.error('Error fetching products:', error);
-    products = [];
+const ProductsSection = () => {
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      setLoading(true);
+      try {
+        const response = await apiClient.get('/api/products');
+
+        if (!response.ok) {
+          console.error(
+            'Failed to fetch products:',
+            response.status,
+            response.statusText,
+          );
+          setProducts([]);
+        } else {
+          try {
+            const result = await response.json();
+            setProducts(Array.isArray(result) ? result : []);
+          } catch (jsonError) {
+            console.error(
+              'Error parsing JSON response from /api/products:',
+              jsonError,
+            );
+            setProducts([]);
+          }
+        }
+      } catch (error) {
+        console.error('Error fetching products:', error);
+        setProducts([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProducts();
+  }, []); // Empty dependency array means this runs once on mount
+
+  if (loading) {
+    return (
+      <div className="text-3xl mt-5 text-center w-full col-span-full max-[1000px]:text-2xl max-[500px]:text-lg text-gray-900 dark:text-white">
+        Loading featured products...
+      </div>
+    );
   }
 
   return (
-    <div className="bg-blue-500 border-t-4 border-white">
-      <div className="max-w-screen-2xl mx-auto pt-20">
-        <Heading title="FEATURED PRODUCTS" />
+    <div
+      id="featured-products" // Added ID for scrolling
+      className="relative border-t-2 border-b-2 border-grilli-gold bg-cover bg-center bg-white dark:bg-gray-800"
+      style={{ backgroundImage: "url('/footer-bg.jpg')" }}
+    >
+      <div className="absolute inset-0 bg-black opacity-60"></div>
+      <div className="relative max-w-screen-2xl mx-auto pt-20">
+        <Heading
+          title="FEATURED PRODUCTS"
+          className="text-black dark:text-white"
+        />
         <div className="grid grid-cols-4 justify-items-center max-w-screen-2xl mx-auto py-10 gap-x-2 px-10 gap-y-8 max-xl:grid-cols-3 max-md:grid-cols-2 max-sm:grid-cols-1">
           {products.length > 0 ? (
             products.map((product: any) => (
               <ProductItem key={product.id} product={product} color="white" />
             ))
           ) : (
-            <div className="col-span-full text-center text-white py-10">
+            <div className="col-span-full text-center text-black dark:text-white py-10">
               <p>No products available at the moment.</p>
             </div>
           )}

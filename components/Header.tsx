@@ -1,135 +1,159 @@
-// *********************
-// Role of the component: Header component
-// Name of the component: Header.tsx
-// Developer: Aleksandar Kuzmanovic
-// Version: 1.0
-// Component call: <Header />
-// Input parameters: no input parameters
-// Output: Header component
-// *********************
-
 "use client";
-import { usePathname } from "next/navigation";
-import React, { useEffect, useState, useCallback } from "react";
-import HeaderTop from "./HeaderTop";
-import Image from "next/image";
-import SearchInput from "./SearchInput";
+import { useEffect, useState } from "react";
+import { useSession } from "next-auth/react";
 import Link from "next/link";
-import { FaBell } from "react-icons/fa6";
-
-import CartElement from "./CartElement";
-import NotificationBell from "./NotificationBell";
+import { usePathname, useRouter } from "next/navigation";
+import { signOut } from "next-auth/react";
+import { CiShoppingBasket, CiUser, CiLocationOn, CiTimer, CiPhone, CiMail } from "react-icons/ci";
+import { IoIosLogOut } from "react-icons/io";
+import { LuLayoutDashboard } from "react-icons/lu";
+import { useCart } from "@/hooks/useCart";
+import { useWishlist } from "@/hooks/useWishlist";
+import SearchInput from "./SearchInput";
 import HeartElement from "./HeartElement";
-import { signOut, useSession } from "next-auth/react";
-import toast from "react-hot-toast";
-import { useWishlistStore } from "@/app/_zustand/wishlistStore";
-import apiClient from "@/lib/api";
+import { user } from "@prisma/client";
+import NotificationBell from "./NotificationBell";
+import ThemeToggle from "./ThemeToggle"; // Added import for ThemeToggle
+import { useRef } from "react"; // Import useRef
+import { Session } from "next-auth"; // Import Session type
 
-const Header = () => {
-  const { data: session, status } = useSession();
+interface HeaderProps {
+  user: user | null;
+}
+
+const HEADER_TOP_HEIGHT = 0; // Approximate height of the top bar in pixels
+
+const Header = ({ user }: HeaderProps) => {
+  const { data: session } = useSession() as { data: Session | null };
+  const router = useRouter();
   const pathname = usePathname();
-  const { wishlist, setWishlist, wishQuantity } = useWishlistStore();
-
-  const handleLogout = () => {
-    setTimeout(() => signOut(), 1000);
-    toast.success("Logout successful!");
-  };
-
-  // getting all wishlist items by user id
-  const getWishlistByUserId = useCallback(async (id: string) => {
-    const response = await apiClient.get(`/api/wishlist/${id}`, {
-      cache: "no-store",
-    });
-    const wishlist = await response.json();
-    const productArray: {
-      id: string;
-      title: string;
-      price: number;
-      image: string;
-      slug:string
-      stockAvailabillity: number;
-    }[] = [];
-    
-    wishlist.map((item: any) => productArray.push({id: item?.product?.id, title: item?.product?.title, price: item?.product?.price, image: item?.product?.mainImage, slug: item?.product?.slug, stockAvailabillity: item?.product?.inStock}));
-    
-    setWishlist(productArray);
-  }, [setWishlist]);
-
-  // getting user by email so I can get his user id
-  const getUserByEmail = useCallback(async () => {
-    if (session?.user?.email) {
-      
-      apiClient.get(`/api/users/email/${session?.user?.email}`, {
-        cache: "no-store",
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          getWishlistByUserId(data?.id);
-        });
-    }
-  }, [session, getWishlistByUserId]);
+  const { cart } = useCart();
+  const { wishlist } = useWishlist();
+  const [isSticky, setIsSticky] = useState(false);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false); // State for dropdown visibility
+  const dropdownRef = useRef<HTMLDivElement>(null); // Ref for dropdown container
 
   useEffect(() => {
-    getUserByEmail();
-  }, [getUserByEmail, wishlist.length]);
+    const handleScroll = () => {
+      if (window.scrollY > 0) { // When scrolled past the top bar height
+        setIsSticky(true);
+      } else {
+        setIsSticky(false);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [dropdownRef]); // Add dropdownRef to dependencies
+
+  const totalItems = cart.reduce((acc, item) => acc + item.quantity, 0);
 
   return (
-    <header className="bg-white">
-      <HeaderTop />
-      {pathname.startsWith("/admin") === false && (
-        <div className="h-32 bg-white flex items-center justify-between px-16 max-[1320px]:px-16 max-md:px-6 max-lg:flex-col max-lg:gap-y-7 max-lg:justify-center max-lg:h-60 max-w-screen-2xl mx-auto">
-          <Link href="/">
-            <Image src="/logo v1 svg.svg" width={300} height={300} alt="singitronic logo" className="relative right-5 max-[1023px]:w-56" />
+    <header className="w-full z-50 fixed top-0 transition-all duration-300">
+      {/* Main Header Section */}
+      <div className={`w-full transition-all duration-300 ${isSticky ? 'bg-black/80 shadow-lg py-2 backdrop-blur-md' : 'bg-transparent py-4'}`}
+           style={{ top: '0px' }}>
+        <div className="container mx-auto px-4 md:px-6 flex items-center justify-between">
+          {/* Logo */}
+          <Link href="/" className="flex items-center gap-2">
+            <h1 className="text-3xl font-bold text-white font-['Forum']">
+              <span className="text-yellow-500">Next</span>
+              <span className="text-white">Shop</span>
+            </h1>
           </Link>
-          <SearchInput />
-          <div className="flex gap-x-10 items-center">
-            <NotificationBell />
-            <HeartElement wishQuantity={wishQuantity} />
-            <CartElement />
-          </div>
-        </div>
-      )}
-      {pathname.startsWith("/admin") === true && (
-        <div className="flex justify-between h-32 bg-white items-center px-16 max-[1320px]:px-10  max-w-screen-2xl mx-auto max-[400px]:px-5">
-          <Link href="/">
-            <Image
-              src="/logo v1.png"
-              width={130}
-              height={130}
-              alt="singitronic logo"
-              className="w-56 h-auto"
-            />
-          </Link>
-          <div className="flex gap-x-5 items-center">
-            <NotificationBell />
-            <div className="dropdown dropdown-end">
-              <div tabIndex={0} role="button" className="w-10">
-                <Image
-                  src="/randomuser.jpg"
-                  alt="random profile photo"
-                  width={30}
-                  height={30}
-                  className="w-full h-full rounded-full"
-                />
-              </div>
-              <ul
-                tabIndex={0}
-                className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52"
-              >
-                <li>
-                  <Link href="/admin">Dashboard</Link>
-                </li>
-                <li>
-                  <a>Profile</a>
-                </li>
-                <li onClick={handleLogout}>
-                  <a href="#">Logout</a>
-                </li>
-              </ul>
+
+          {/* E-commerce Actions */}
+          <div className="flex items-center gap-6">
+            <div className="hidden md:block">
+              <SearchInput />
             </div>
-          </div>
+            {session?.user?.role === "ADMIN" && (
+              <Link href="/admin" className="text-white hover:text-yellow-500 transition-colors duration-200">
+                <LuLayoutDashboard size={24} />
+              </Link>
+            )}
+            {user && <NotificationBell />}
+
+            {session?.user ? (
+              <div className="relative" ref={dropdownRef}> {/* Added ref here */}
+                <div
+                  className="flex items-center gap-2 cursor-pointer text-white hover:text-yellow-500"
+                  onClick={() => setIsDropdownOpen(!isDropdownOpen)} // Toggle dropdown on click
+                >
+                  <CiUser size={24} />
+                  <span className="hidden lg:block">{session.user.name}</span>
+                </div>
+                <div className={`absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-20 dark:bg-gray-800 ${isDropdownOpen ? 'block' : 'hidden'}`}> {/* Controlled by state */}
+                  {user?.role === "ADMIN" && (
+                    <Link
+                      href="/admin"
+                      className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-700"
+                      onClick={() => setIsDropdownOpen(false)} // Close dropdown on click
+                    >
+                      <LuLayoutDashboard />
+                      Admin
+                    </Link>
+                  )}
+                  <button
+                    onClick={() => {
+                      signOut();
+                      setIsDropdownOpen(false); // Close dropdown on logout
+                    }}
+                    className="flex items-center gap-2 w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-700"
+                  >
+                    <IoIosLogOut />
+                    Logout
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <div className="flex items-center gap-2">
+                <Link
+                  href="/login"
+                  className="flex items-center gap-2 cursor-pointer text-white hover:text-yellow-500 bg-white/10 backdrop-blur-lg border border-white/20 rounded-full px-4 py-2"
+                >
+                  <CiUser size={24} />
+                  <span className="hidden lg:block">Login</span>
+                </Link>
+                <Link
+                  href="/register"
+                  className="flex items-center gap-2 cursor-pointer text-white hover:text-yellow-500 bg-white/10 backdrop-blur-lg border border-white/20 rounded-full px-4 py-2"
+                >
+                  <span className="hidden lg:block">Register</span>
+                </Link>
+              </div>
+            )}
+
+            <ThemeToggle /> {/* Added ThemeToggle component */}
+            <HeartElement wishQuantity={wishlist.length} />
+
+            <Link href="/cart" className="relative text-white hover:text-yellow-500">
+              <CiShoppingBasket size={24} />
+              {totalItems > 0 && (
+                <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                  {totalItems}
+                </span>
+              )}
+            </Link>
+            </div>
         </div>
-      )}
+      </div>
     </header>
   );
 };

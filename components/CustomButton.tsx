@@ -8,33 +8,38 @@
 // Output: custom button component
 // *********************
 
-import React from "react";
+import React from 'react';
 
 interface CustomButtonProps {
-  paddingX: number;
-  paddingY: number;
-  text: string;
-  buttonType: "submit" | "reset" | "button";
-  customWidth: string;
-  textSize: string;
+  children: React.ReactNode; // Use children for more flexible content
+  onClick?: () => void; // Optional click handler
+  className?: string; // Allow external classNames
+  buttonType?: 'submit' | 'reset' | 'button'; // Make optional
+  paddingX?: number; // Make optional
+  paddingY?: number; // Make optional
+  customWidth?: string; // Make optional
+  textSize?: string; // Make optional
 }
 
 const CustomButton = ({
-  paddingX,
-  paddingY,
-  text,
-  buttonType,
-  customWidth,
-  textSize
+  children,
+  onClick,
+  className = '', // Default to empty string
+  buttonType = 'button', // Default to 'button'
+  paddingX = 4, // Default padding
+  paddingY = 2, // Default padding
+  customWidth = 'no', // Default width
+  textSize = 'base', // Default text size
 }: CustomButtonProps) => {
-
+  const baseClasses = `${customWidth !== 'no' && `w-${customWidth}`} uppercase px-${paddingX} py-${paddingY} text-${textSize} font-bold shadow-sm focus:outline-none focus:ring-2`;
 
   return (
     <button
-      type={`${buttonType}`}
-      className={`${customWidth !== "no" && `w-${customWidth}`} uppercase bg-white px-${paddingX} py-${paddingY} text-${textSize} border border-black border-gray-300 font-bold text-blue-600 shadow-sm hover:bg-black hover:bg-gray-100 focus:outline-none focus:ring-2`}
+      type={buttonType}
+      onClick={onClick}
+      className={`${baseClasses} ${className}`} // Apply external className
     >
-      {text}
+      {children}
     </button>
   );
 };

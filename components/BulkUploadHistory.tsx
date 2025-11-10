@@ -184,36 +184,40 @@ const BulkUploadHistory = () => {
   }
 
   return (
-    <div className="space-y-4">
-      <h2 className="text-2xl font-bold mb-4">📜 Upload History</h2>
+    <div className="space-y-4 p-4 rounded-lg
+                bg-white/10 backdrop-blur-md border border-white/20 shadow-lg
+                dark:bg-black/20 dark:border-gray-700">
+      <h2 className="text-2xl font-bold mb-4 text-white">📜 Upload History</h2>
 
       {/* Delete Confirmation Modal */}
       {showDeleteModal && batchToDelete && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-6 max-w-md w-full mx-4 shadow-xl">
+        <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50">
+          <div className="rounded-lg p-6 max-w-md w-full mx-4 shadow-xl
+                      bg-white/10 backdrop-blur-md border border-white/20 text-white
+                      dark:bg-black/20 dark:border-gray-700">
             <div className="flex items-center gap-3 mb-4">
-              <FaExclamationTriangle className="text-yellow-500 text-3xl" />
-              <h3 className="text-xl font-bold">Delete Batch Upload</h3>
+              <FaExclamationTriangle className="text-yellow-400 text-3xl" />
+              <h3 className="text-xl font-bold text-white">Delete Batch Upload</h3>
             </div>
 
-            <p className="text-gray-700 mb-4">
+            <p className="text-gray-200 mb-4">
               Are you sure you want to delete{" "}
               <strong>{batchToDelete.fileName}</strong>?
             </p>
 
-            <div className="bg-yellow-50 border border-yellow-200 rounded p-3 mb-4">
+            <div className="bg-yellow-500/20 border border-yellow-400 rounded p-3 mb-4">
               <label className="flex items-start gap-2 cursor-pointer">
                 <input
                   type="checkbox"
                   checked={deleteProducts}
                   onChange={(e) => setDeleteProducts(e.target.checked)}
-                  className="mt-1"
+                  className="mt-1 checkbox checkbox-warning"
                 />
                 <div className="text-sm">
-                  <span className="font-semibold text-yellow-800">
+                  <span className="font-semibold text-yellow-300">
                     Also delete all products created from this batch
                   </span>
-                  <p className="text-yellow-700 text-xs mt-1">
+                  <p className="text-yellow-200 text-xs mt-1">
                     Warning: This will permanently delete all products that were
                     created from this CSV upload. Products that are in orders
                     cannot be deleted.
@@ -225,13 +229,13 @@ const BulkUploadHistory = () => {
             <div className="flex gap-3">
               <button
                 onClick={handleDeleteCancel}
-                className="flex-1 px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300 transition-colors"
+                className="flex-1 px-4 py-2 bg-gray-500/20 text-gray-200 rounded hover:bg-gray-500/30 transition-colors border border-gray-500/30"
               >
                 Cancel
               </button>
               <button
                 onClick={handleDeleteConfirm}
-                className="flex-1 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 transition-colors font-semibold"
+                className="flex-1 px-4 py-2 bg-red-500/20 text-red-200 rounded hover:bg-red-500/30 transition-colors font-semibold border border-red-500/30"
               >
                 {deleteProducts
                   ? "Delete Batch & Products"
@@ -245,14 +249,16 @@ const BulkUploadHistory = () => {
       {batches.map((batch) => (
         <div
           key={batch.id}
-          className="bg-white border border-gray-200 rounded-lg p-6 shadow-sm hover:shadow-md transition-shadow"
+          className="rounded-lg p-6 shadow-sm hover:shadow-md transition-shadow
+                     bg-white/10 backdrop-blur-md border border-white/20 text-white
+                     dark:bg-black/20 dark:border-gray-700"
         >
           <div className="flex items-start justify-between mb-4">
             <div className="flex items-center gap-3">
               {getStatusIcon(batch.status)}
               <div>
-                <h3 className="font-semibold text-lg">{batch.fileName}</h3>
-                <p className="text-sm text-gray-500">
+                <h3 className="font-semibold text-lg text-white">{batch.fileName}</h3>
+                <p className="text-sm text-gray-200">
                   Uploaded by {batch.uploadedBy} •{" "}
                   {formatDate(batch.uploadedAt)}
                 </p>
@@ -262,12 +268,12 @@ const BulkUploadHistory = () => {
               <span
                 className={`px-3 py-1 rounded-full text-sm font-semibold ${
                   batch.status === "COMPLETED"
-                    ? "bg-green-100 text-green-700"
+                    ? "bg-green-500 text-white"
                     : batch.status === "FAILED"
-                    ? "bg-red-100 text-red-700"
+                    ? "bg-red-500 text-white"
                     : batch.status === "PARTIAL"
-                    ? "bg-yellow-100 text-yellow-700"
-                    : "bg-gray-100 text-gray-700"
+                    ? "bg-yellow-500 text-white"
+                    : "bg-gray-500 text-white"
                 }`}
               >
                 {batch.status}
@@ -275,11 +281,11 @@ const BulkUploadHistory = () => {
               <button
                 onClick={() => handleDeleteClick(batch.id, batch.fileName)}
                 disabled={deletingBatchId === batch.id}
-                className="p-2 text-red-500 hover:bg-red-50 rounded transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                className="p-2 text-red-400 hover:bg-white/20 rounded transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 title="Delete batch"
               >
                 {deletingBatchId === batch.id ? (
-                  <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-red-500"></div>
+                  <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-red-400"></div>
                 ) : (
                   <FaTrash />
                 )}
@@ -288,26 +294,26 @@ const BulkUploadHistory = () => {
           </div>
 
           <div className="grid grid-cols-4 gap-4 mb-4">
-            <div className="bg-gray-50 rounded p-3 text-center">
-              <p className="text-2xl font-bold text-gray-700">
+            <div className="bg-white/10 rounded p-3 text-center border border-white/20">
+              <p className="text-2xl font-bold text-white">
                 {batch.totalRecords}
               </p>
-              <p className="text-xs text-gray-500">Total</p>
+              <p className="text-xs text-gray-200">Total</p>
             </div>
-            <div className="bg-green-50 rounded p-3 text-center">
-              <p className="text-2xl font-bold text-green-600">
+            <div className="bg-white/10 rounded p-3 text-center border border-white/20">
+              <p className="text-2xl font-bold text-green-400">
                 {batch.successfulRecords}
               </p>
-              <p className="text-xs text-gray-500">Success</p>
+              <p className="text-xs text-gray-200">Success</p>
             </div>
-            <div className="bg-red-50 rounded p-3 text-center">
-              <p className="text-2xl font-bold text-red-600">
+            <div className="bg-white/10 rounded p-3 text-center border border-white/20">
+              <p className="text-2xl font-bold text-red-400">
                 {batch.failedRecords}
               </p>
-              <p className="text-xs text-gray-500">Failed</p>
+              <p className="text-xs text-gray-200">Failed</p>
             </div>
-            <div className="bg-blue-50 rounded p-3 text-center">
-              <p className="text-2xl font-bold text-blue-600">
+            <div className="bg-white/10 rounded p-3 text-center border border-white/20">
+              <p className="text-2xl font-bold text-blue-400">
                 {batch.totalRecords > 0
                   ? Math.round(
                       (batch.successfulRecords / batch.totalRecords) * 100
@@ -315,21 +321,21 @@ const BulkUploadHistory = () => {
                   : 0}
                 %
               </p>
-              <p className="text-xs text-gray-500">Success Rate</p>
+              <p className="text-xs text-gray-200">Success Rate</p>
             </div>
           </div>
 
           {batch.errors && batch.errors.length > 0 && (
-            <div className="bg-red-50 border border-red-200 rounded p-3">
-              <p className="font-semibold text-red-700 text-sm mb-2">
+            <div className="bg-red-500/20 border border-red-400 rounded p-3 text-white">
+              <p className="font-semibold text-red-300 text-sm mb-2">
                 Errors ({batch.errors.length}):
               </p>
-              <ul className="list-disc list-inside space-y-1 text-xs text-red-600 max-h-24 overflow-y-auto">
+              <ul className="list-disc list-inside space-y-1 text-xs text-red-200 max-h-24 overflow-y-auto">
                 {batch.errors.slice(0, 5).map((error, index) => (
                   <li key={index}>{error}</li>
                 ))}
                 {batch.errors.length > 5 && (
-                  <li className="text-red-500 font-semibold">
+                  <li className="text-red-300 font-semibold">
                     ... and {batch.errors.length - 5} more errors
                   </li>
                 )}

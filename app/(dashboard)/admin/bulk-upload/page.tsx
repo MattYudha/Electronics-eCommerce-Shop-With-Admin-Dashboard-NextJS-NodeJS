@@ -151,17 +151,19 @@ Another Product,149.99,Another Manufacturer,5,https://example.com/image2.jpg,Ano
   };
 
   return (
-    <div className="flex xl:flex-row flex-col justify-start items-start">
+    <div className="flex xl:flex-row flex-col justify-start items-start relative z-10">
       <DashboardSidebar />
       <div className="w-full xl:p-14 p-4">
-        <h1 className="text-4xl font-bold mb-8">Bulk Upload Products</h1>
+        <h1 className="text-4xl font-bold mb-8 text-white">Bulk Upload Products</h1>
 
         {/* Instructions */}
-        <div className="bg-blue-50 border-l-4 border-blue-500 p-4 mb-6">
-          <h2 className="text-lg font-semibold mb-2 text-blue-800">
+        <div className="p-4 mb-6 rounded-lg
+                    bg-white/10 backdrop-blur-md border border-white/20 shadow-lg text-white
+                    dark:bg-black/20 dark:border-gray-700">
+          <h2 className="text-lg font-semibold mb-2 text-white">
             📋 Instructions
           </h2>
-          <ul className="list-disc list-inside space-y-1 text-sm text-blue-700">
+          <ul className="list-disc list-inside space-y-1 text-sm text-gray-200">
             <li>Download the CSV template below</li>
             <li>
               Fill in your product data (title, price, manufacturer, stock,
@@ -176,7 +178,9 @@ Another Product,149.99,Another Manufacturer,5,https://example.com/image2.jpg,Ano
         <div className="mb-6">
           <button
             onClick={downloadTemplate}
-            className="flex items-center gap-2 bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-6 rounded-lg transition-colors"
+            className="flex items-center gap-2 font-bold py-3 px-6 rounded-lg transition-colors
+                       bg-white/20 backdrop-blur-md border border-white/30 shadow-lg text-white
+                       hover:bg-white/30 hover:border-white/50"
           >
             <FaDownload /> Download CSV Template
           </button>
@@ -185,20 +189,22 @@ Another Product,149.99,Another Manufacturer,5,https://example.com/image2.jpg,Ano
         {/* File Upload Area */}
         <div className="mb-6">
           <div
-            className={`border-2 border-dashed rounded-lg p-8 text-center transition-colors ${
+            className={`border-2 border-dashed rounded-lg p-8 text-center transition-colors
+              bg-white/10 backdrop-blur-md border-white/30 shadow-lg text-white
+              dark:bg-black/20 dark:border-gray-700 ${
               dragActive
-                ? "border-blue-500 bg-blue-50"
-                : "border-gray-300 bg-gray-50 hover:border-gray-400"
+                ? "border-blue-500 bg-white/20"
+                : "hover:border-white/50"
             }`}
             onDragEnter={handleDrag}
             onDragLeave={handleDrag}
             onDragOver={handleDrag}
             onDrop={handleDrop}
           >
-            <FaFileUpload className="text-6xl text-gray-400 mx-auto mb-4" />
+            <FaFileUpload className="text-6xl text-white mx-auto mb-4" />
             <p className="text-lg mb-2">
               {file ? (
-                <span className="font-semibold text-blue-600">
+                <span className="font-semibold text-white">
                   Selected: {file.name} ({(file.size / 1024).toFixed(2)} KB)
                 </span>
               ) : (
@@ -215,7 +221,9 @@ Another Product,149.99,Another Manufacturer,5,https://example.com/image2.jpg,Ano
             />
             <label
               htmlFor="file-upload"
-              className="inline-block bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-6 rounded cursor-pointer transition-colors"
+              className="inline-block font-bold py-2 px-6 rounded cursor-pointer transition-colors
+                         bg-white/20 backdrop-blur-md border border-white/30 shadow-lg text-white
+                         hover:bg-white/30 hover:border-white/50"
             >
               Select CSV File
             </label>
@@ -228,10 +236,13 @@ Another Product,149.99,Another Manufacturer,5,https://example.com/image2.jpg,Ano
             <button
               onClick={handleUpload}
               disabled={uploading}
-              className={`w-full py-4 px-6 rounded-lg font-bold text-white text-lg transition-colors ${
+              className={`w-full py-4 px-6 rounded-lg font-bold text-lg transition-colors
+                bg-white/20 backdrop-blur-md border border-white/30 shadow-lg text-white
+                hover:bg-white/30 hover:border-white/50
+                ${
                 uploading
-                  ? "bg-gray-400 cursor-not-allowed"
-                  : "bg-blue-500 hover:bg-blue-600"
+                  ? "opacity-50 cursor-not-allowed"
+                  : ""
               }`}
             >
               {uploading ? (
@@ -268,10 +279,12 @@ Another Product,149.99,Another Manufacturer,5,https://example.com/image2.jpg,Ano
         {/* Upload Result */}
         {uploadResult && (
           <div
-            className={`border-l-4 p-6 rounded-lg ${
+            className={`border-l-4 p-6 rounded-lg
+              bg-white/10 backdrop-blur-md border border-white/20 shadow-lg text-white
+              dark:bg-black/20 dark:border-gray-700 ${
               uploadResult.success
-                ? "bg-green-50 border-green-500"
-                : "bg-red-50 border-red-500"
+                ? "border-green-500"
+                : "border-red-500"
             }`}
           >
             <div className="flex items-start gap-3">
@@ -283,7 +296,7 @@ Another Product,149.99,Another Manufacturer,5,https://example.com/image2.jpg,Ano
               <div className="flex-1">
                 <h3
                   className={`text-xl font-bold mb-2 ${
-                    uploadResult.success ? "text-green-800" : "text-red-800"
+                    uploadResult.success ? "text-green-400" : "text-red-400"
                   }`}
                 >
                   {uploadResult.success
@@ -292,43 +305,43 @@ Another Product,149.99,Another Manufacturer,5,https://example.com/image2.jpg,Ano
                 </h3>
                 <p
                   className={`mb-3 ${
-                    uploadResult.success ? "text-green-700" : "text-red-700"
+                    uploadResult.success ? "text-green-200" : "text-red-200"
                   }`}
                 >
                   {uploadResult.message}
                 </p>
 
                 {uploadResult.details && (
-                  <div className="bg-white rounded p-4 space-y-2">
-                    <p className="font-semibold">Upload Statistics:</p>
+                  <div className="bg-white/10 rounded p-4 space-y-2 border border-white/20">
+                    <p className="font-semibold text-white">Upload Statistics:</p>
                     <div className="grid grid-cols-3 gap-4">
                       <div className="text-center">
-                        <p className="text-2xl font-bold text-blue-600">
+                        <p className="text-2xl font-bold text-blue-300">
                           {uploadResult.details.processed}
                         </p>
-                        <p className="text-sm text-gray-600">Processed</p>
+                        <p className="text-sm text-gray-200">Processed</p>
                       </div>
                       <div className="text-center">
-                        <p className="text-2xl font-bold text-green-600">
+                        <p className="text-2xl font-bold text-green-300">
                           {uploadResult.details.successful}
                         </p>
-                        <p className="text-sm text-gray-600">Successful</p>
+                        <p className="text-sm text-gray-200">Successful</p>
                       </div>
                       <div className="text-center">
-                        <p className="text-2xl font-bold text-red-600">
+                        <p className="text-2xl font-bold text-red-300">
                           {uploadResult.details.failed}
                         </p>
-                        <p className="text-sm text-gray-600">Failed</p>
+                        <p className="text-sm text-gray-200">Failed</p>
                       </div>
                     </div>
 
                     {uploadResult.details.errors &&
                       uploadResult.details.errors.length > 0 && (
                         <div className="mt-4">
-                          <p className="font-semibold text-red-700 mb-2">
+                          <p className="font-semibold text-red-300 mb-2">
                             Errors:
                           </p>
-                          <ul className="list-disc list-inside space-y-1 text-sm text-red-600 max-h-40 overflow-y-auto">
+                          <ul className="list-disc list-inside space-y-1 text-sm text-red-200 max-h-40 overflow-y-auto">
                             {uploadResult.details.errors.map((error, index) => (
                               <li key={index}>{error}</li>
                             ))}
@@ -343,104 +356,106 @@ Another Product,149.99,Another Manufacturer,5,https://example.com/image2.jpg,Ano
         )}
 
         {/* CSV Format Guide */}
-        <div className="mt-8 bg-gray-50 rounded-lg p-6">
-          <h2 className="text-2xl font-bold mb-4">📝 CSV Format Guide</h2>
+        <div className="mt-8 p-6 rounded-lg
+                    bg-white/10 backdrop-blur-md border border-white/20 shadow-lg text-white
+                    dark:bg-black/20 dark:border-gray-700">
+          <h2 className="text-2xl font-bold mb-4 text-white">📝 CSV Format Guide</h2>
           <div className="overflow-x-auto">
-            <table className="min-w-full bg-white border border-gray-300 text-sm">
+            <table className="min-w-full bg-transparent border border-white/20 text-sm text-white">
               <thead>
-                <tr className="bg-gray-100">
-                  <th className="border border-gray-300 px-4 py-2 text-left">
+                <tr className="bg-white/20 dark:bg-black/30">
+                  <th className="border border-white/20 px-4 py-2 text-left">
                     Column
                   </th>
-                  <th className="border border-gray-300 px-4 py-2 text-left">
+                  <th className="border border-white/20 px-4 py-2 text-left">
                     Required
                   </th>
-                  <th className="border border-gray-300 px-4 py-2 text-left">
+                  <th className="border border-white/20 px-4 py-2 text-left">
                     Type
                   </th>
-                  <th className="border border-gray-300 px-4 py-2 text-left">
+                  <th className="border border-white/20 px-4 py-2 text-left">
                     Description
                   </th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
-                  <td className="border border-gray-300 px-4 py-2 font-mono">
+                  <td className="border border-white/20 px-4 py-2 font-mono">
                     title
                   </td>
-                  <td className="border border-gray-300 px-4 py-2">✅ Yes</td>
-                  <td className="border border-gray-300 px-4 py-2">String</td>
-                  <td className="border border-gray-300 px-4 py-2">
+                  <td className="border border-white/20 px-4 py-2">✅ Yes</td>
+                  <td className="border border-white/20 px-4 py-2">String</td>
+                  <td className="border border-white/20 px-4 py-2">
                     Product name
                   </td>
                 </tr>
                 <tr>
-                  <td className="border border-gray-300 px-4 py-2 font-mono">
+                  <td className="border border-white/20 px-4 py-2 font-mono">
                     price
                   </td>
-                  <td className="border border-gray-300 px-4 py-2">✅ Yes</td>
-                  <td className="border border-gray-300 px-4 py-2">Number</td>
-                  <td className="border border-gray-300 px-4 py-2">
+                  <td className="border border-white/20 px-4 py-2">✅ Yes</td>
+                  <td className="border border-white/20 px-4 py-2">Number</td>
+                  <td className="border border-white/20 px-4 py-2">
                     Product price (e.g., 99.99)
                   </td>
                 </tr>
                 <tr>
-                  <td className="border border-gray-300 px-4 py-2 font-mono">
+                  <td className="border border-white/20 px-4 py-2 font-mono">
                     manufacturer
                   </td>
-                  <td className="border border-gray-300 px-4 py-2">✅ Yes</td>
-                  <td className="border border-gray-300 px-4 py-2">String</td>
-                  <td className="border border-gray-300 px-4 py-2">
+                  <td className="border border-white/20 px-4 py-2">✅ Yes</td>
+                  <td className="border border-white/20 px-4 py-2">String</td>
+                  <td className="border border-white/20 px-4 py-2">
                     Manufacturer/Brand name
                   </td>
                 </tr>
                 <tr>
-                  <td className="border border-gray-300 px-4 py-2 font-mono">
+                  <td className="border border-white/20 px-4 py-2 font-mono">
                     inStock
                   </td>
-                  <td className="border border-gray-300 px-4 py-2">❌ No</td>
-                  <td className="border border-gray-300 px-4 py-2">Number</td>
-                  <td className="border border-gray-300 px-4 py-2">
+                  <td className="border border-white/20 px-4 py-2">❌ No</td>
+                  <td className="border border-white/20 px-4 py-2">Number</td>
+                  <td className="border border-white/20 px-4 py-2">
                     Stock quantity (default: 0)
                   </td>
                 </tr>
                 <tr>
-                  <td className="border border-gray-300 px-4 py-2 font-mono">
+                  <td className="border border-white/20 px-4 py-2 font-mono">
                     mainImage
                   </td>
-                  <td className="border border-gray-300 px-4 py-2">❌ No</td>
-                  <td className="border border-gray-300 px-4 py-2">URL</td>
-                  <td className="border border-gray-300 px-4 py-2">
+                  <td className="border border-white/20 px-4 py-2">❌ No</td>
+                  <td className="border border-white/20 px-4 py-2">URL</td>
+                  <td className="border border-white/20 px-4 py-2">
                     Product image URL
                   </td>
                 </tr>
                 <tr>
-                  <td className="border border-gray-300 px-4 py-2 font-mono">
+                  <td className="border border-white/20 px-4 py-2 font-mono">
                     description
                   </td>
-                  <td className="border border-gray-300 px-4 py-2">✅ Yes</td>
-                  <td className="border border-gray-300 px-4 py-2">String</td>
-                  <td className="border border-gray-300 px-4 py-2">
+                  <td className="border border-white/20 px-4 py-2">✅ Yes</td>
+                  <td className="border border-white/20 px-4 py-2">String</td>
+                  <td className="border border-white/20 px-4 py-2">
                     Product description
                   </td>
                 </tr>
                 <tr>
-                  <td className="border border-gray-300 px-4 py-2 font-mono">
+                  <td className="border border-white/20 px-4 py-2 font-mono">
                     slug
                   </td>
-                  <td className="border border-gray-300 px-4 py-2">✅ Yes</td>
-                  <td className="border border-gray-300 px-4 py-2">String</td>
-                  <td className="border border-gray-300 px-4 py-2">
+                  <td className="border border-white/20 px-4 py-2">✅ Yes</td>
+                  <td className="border border-white/20 px-4 py-2">String</td>
+                  <td className="border border-white/20 px-4 py-2">
                     URL-friendly identifier
                   </td>
                 </tr>
                 <tr>
-                  <td className="border border-gray-300 px-4 py-2 font-mono">
+                  <td className="border border-white/20 px-4 py-2 font-mono">
                     categoryId
                   </td>
-                  <td className="border border-gray-300 px-4 py-2">✅ Yes</td>
-                  <td className="border border-gray-300 px-4 py-2">UUID</td>
-                  <td className="border border-gray-300 px-4 py-2">
+                  <td className="border border-white/20 px-4 py-2">✅ Yes</td>
+                  <td className="border border-white/20 px-4 py-2">UUID</td>
+                  <td className="border border-white/20 px-4 py-2">
                     Category ID from database
                   </td>
                 </tr>

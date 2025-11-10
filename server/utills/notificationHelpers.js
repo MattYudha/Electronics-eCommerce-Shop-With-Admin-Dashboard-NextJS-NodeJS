@@ -29,7 +29,7 @@ const createOrderUpdateNotification = async (userId, orderStatus, orderId, total
       },
       'confirmed': {
         title: 'Order Confirmed',
-        message: `Great news! Your order #${orderId} has been confirmed and will be prepared for shipping.`,
+        message: `Pesanan Anda dengan nomor #${orderId} telah berhasil dikonfirmasi. Kami akan segera menghubungi Anda untuk proses selanjutnya dan mempersiapkan pengiriman.`,
         priority: 'HIGH'
       },
       'processing': {

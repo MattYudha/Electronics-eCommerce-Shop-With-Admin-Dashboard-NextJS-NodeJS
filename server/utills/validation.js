@@ -342,12 +342,11 @@ const validateOrderData = (orderData) => {
     }
   };
 
-  // Validate all required fields - ALL will be checked regardless of previous errors
+  // Validate all required fields
   validatedData.name = safeValidate(orderValidation.validateName, orderData.name, 'name');
   validatedData.lastname = safeValidate(orderValidation.validateName, orderData.lastname, 'lastname');
   validatedData.email = safeValidate(orderValidation.validateEmail, orderData.email, 'email');
   validatedData.phone = safeValidate(orderValidation.validatePhone, orderData.phone, 'phone');
-  validatedData.company = safeValidate(orderValidation.validateAddress, orderData.company, 'company');
   validatedData.adress = safeValidate(orderValidation.validateAddress, orderData.adress, 'address');
   validatedData.apartment = safeValidate(orderValidation.validateAddress, orderData.apartment, 'apartment');
   validatedData.city = safeValidate(orderValidation.validateAddress, orderData.city, 'city');
@@ -357,6 +356,13 @@ const validateOrderData = (orderData) => {
   validatedData.status = safeValidate(orderValidation.validateStatus, orderData.status || 'pending', 'status');
   
   // Optional fields
+  // Handle optional company field explicitly
+  if (orderData.company && typeof orderData.company === 'string' && orderData.company.trim() !== '') {
+    validatedData.company = safeValidate(orderValidation.validateAddress, orderData.company, 'company');
+  } else {
+    validatedData.company = ''; // It's optional, so an empty string is fine.
+  }
+  
   validatedData.orderNotice = orderData.orderNotice ? 
     orderData.orderNotice.trim().substring(0, 500) : ''; // Limit to 500 characters
 

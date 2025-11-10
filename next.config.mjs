@@ -1,38 +1,20 @@
 /** @type {import('next').NextConfig} */
+// Ambil hostname dari environment variable
+const backendUrl = process.env.NEXT_PUBLIC_API_BASE_URL
+  ? new URL(process.env.NEXT_PUBLIC_API_BASE_URL)
+  : null;
+
 const nextConfig = {
-    images: {
-        remotePatterns: [
-          {
-            protocol: 'https',
-            hostname: 'placehold.co',
-            port: ""
-          },
-        ],
+  images: {
+    remotePatterns: [
+      {
+        protocol: backendUrl ? backendUrl.protocol.replace(':', '') : 'http',
+        hostname: backendUrl ? backendUrl.hostname : 'localhost',
+        port: backendUrl ? backendUrl.port : '5000',
+        pathname: '/uploads/**', // Izinkan semua gambar dari folder /uploads
       },
-    env: {
-        NEXT_PUBLIC_API_BASE_URL: process.env.NEXT_PUBLIC_API_BASE_URL,
-    },
-    async headers() {
-      return [
-        {
-          source: '/(.*)',
-          headers: [
-            {
-              key: 'X-Frame-Options',
-              value: 'DENY',
-            },
-            {
-              key: 'X-Content-Type-Options',
-              value: 'nosniff',
-            },
-            {
-              key: 'X-XSS-Protection',
-              value: '1; mode=block',
-            },
-          ],
-        },
-      ];
-    },
+    ],
+  },
 };
 
 export default nextConfig;

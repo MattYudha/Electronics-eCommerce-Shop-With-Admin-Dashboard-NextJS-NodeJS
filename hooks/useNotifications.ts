@@ -114,6 +114,23 @@ export const useNotifications = () => {
     }
   }, [selectedIds, getCurrentUserId, markAsRead, clearSelection, fetchUnreadCount]);
 
+  // Mark all notifications as read
+  const markAllUserNotificationsAsRead = useCallback(async () => {
+    const userId = await getCurrentUserId();
+    if (!userId) return;
+
+    try {
+      await notificationApi.markAllAsRead(userId);
+      // After marking all as read, refresh the unread count and clear local notifications
+      setNotifications({ notifications: [], unreadCount: 0, total: 0, page: 1, totalPages: 1 }); // Clear local state
+      await fetchUnreadCount(); // Ensure unread count is 0
+      toast.success('All notifications marked as read');
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Failed to mark all notifications as read';
+      toast.error(errorMessage);
+    }
+  }, [getCurrentUserId, fetchUnreadCount, setNotifications]);
+
   // Delete single notification
   const deleteNotificationById = useCallback(async (notificationId: string) => {
     const userId = await getCurrentUserId();
@@ -190,6 +207,7 @@ export const useNotifications = () => {
     fetchUnreadCount,
     markNotificationAsRead,
     markSelectedAsRead,
+    markAllUserNotificationsAsRead, // Export the new function
     deleteNotificationById,
     deleteSelectedNotifications,
     updateFilters,

@@ -8,24 +8,35 @@
 // Output: Section with the text "Introducing Singitronic" and button
 // *********************
 
-import Link from "next/link";
-import React from "react";
+import Link from 'next/link';
+import React from 'react';
 
 const IntroducingSection = () => {
   return (
-    <div className="py-20 pt-24 bg-gradient-to-l from-white to-blue-600">
-      <div className="text-center flex flex-col gap-y-5 items-center">
-        <h2 className="text-white text-8xl font-extrabold text-center mb-2 max-md:text-6xl max-[480px]:text-4xl">
-          INTRODUCING <span className="text-black">SINGI</span><span className="text-blue-600">TRONIC</span>
+    <div
+      className="relative py-20 pt-24 bg-cover bg-center"
+      style={{ backgroundImage: "url('/footer-bg.jpg')" }}
+    >
+      <div className="absolute inset-0 bg-black opacity-60"></div>
+      <div className="relative text-center flex flex-col gap-y-5 items-center">
+        <h2 className="text-white text-8xl font-extrabold text-center mb-2 max-md:text-6xl max-[480px]:text-4xl font-forum">
+          INTRODUCING <span className="text-grilli-gold">SINGI</span>
+          <span className="text-white">TRONIC</span>
         </h2>
         <div>
-          <p className="text-white text-center text-2xl font-semibold max-md:text-xl max-[480px]:text-base">
+          <p className="text-white text-center text-2xl font-semibold max-md:text-xl max-[480px]:text-base font-dm-sans">
             Buy the latest electronics.
           </p>
-          <p className="text-white text-center text-2xl font-semibold max-md:text-xl max-[480px]:text-base">
+          <p className="text-white text-center text-2xl font-semibold max-md:text-xl max-[480px]:text-base font-dm-sans">
             The best electronics for tech lovers.
           </p>
-          <Link href="/shop" className="block text-blue-600 bg-white font-bold px-12 py-3 text-xl hover:bg-gray-100 w-96 mt-2  max-md:text-lg max-md:w-72 max-[480px]:w-60 mx-auto">
+          <Link
+            href="/shop"
+            className="block font-bold px-10 py-4 text-xl w-fit mt-6 mx-auto
+                       bg-white/20 backdrop-blur-md border border-white/30 shadow-lg rounded-full text-white
+                       hover:bg-white/30 hover:border-white/50 transition-all duration-300
+                       max-md:text-lg max-md:px-8 max-md:py-3 max-sm:text-base max-sm:px-6 max-sm:py-2"
+          >
             SHOP NOW
           </Link>
         </div>

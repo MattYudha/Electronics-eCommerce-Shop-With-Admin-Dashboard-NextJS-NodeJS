@@ -96,10 +96,16 @@ const RegisterPage = () => {
     <div className="bg-white">
       <SectionTitle title="Register" path="Home | Register" />
       <div className="flex min-h-full flex-1 flex-col justify-center py-12 sm:px-6 lg:px-8 bg-white">
-        <div className="flex justify-center flex-col items-center">
-          <h2 className="mt-6 text-center text-2xl leading-9 tracking-tight text-gray-900">
-            Sign up on our website
-          </h2>
+        <div className="sm:mx-auto sm:w-full sm:max-w-md px-4">
+          <div className="text-center space-y-2 mb-8">
+            <h2 className="text-4xl sm:text-5xl font-bold font-['Forum']">
+              <span className="text-yellow-500">Create an</span>{' '}
+              <span className="text-gray-600 dark:text-gray-400">Account</span>
+            </h2>
+            <p className="text-gray-600 dark:text-gray-400 text-sm">
+              Get started with your new account
+            </p>
+          </div>
         </div>
 
         <div className="mt-5 sm:mx-auto sm:w-full sm:max-w-[480px]">
@@ -218,12 +224,15 @@ const RegisterPage = () => {
               <div>
                 <CustomButton
                   buttonType="submit"
-                  text="Sign up"
                   paddingX={3}
-                  paddingY={1.5}
+                  paddingY={3}
                   customWidth="full"
-                  textSize="sm"
-                />
+                  textSize="lg"
+                  className="relative overflow-hidden group bg-yellow-500/30 dark:bg-yellow-700/30 backdrop-blur-md border border-yellow-400/50 dark:border-yellow-600/50 text-white hover:bg-yellow-500/50 dark:hover:bg-yellow-700/50 transition-all duration-300 rounded-full"
+                >
+                  <span className="text-yellow-500 group-hover:text-white transition-colors duration-300">Register</span>{' '}
+                  <span className="text-gray-600 dark:text-gray-400 group-hover:text-white transition-colors duration-300">Now</span>
+                </CustomButton>
 
                 <p className="text-red-600 text-center text-[16px] my-4">
                   {error && error}

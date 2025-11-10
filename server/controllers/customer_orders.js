@@ -389,6 +389,8 @@ async function getAllOrders(request, response) {
       prisma.customer_order.count()
     ]);
 
+    console.log({ orders, totalCount });
+
     return response.json({
       orders,
       pagination: {

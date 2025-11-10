@@ -27,15 +27,19 @@ const SearchInput = () => {
   };
 
   return (
-    <form className="flex w-full justify-center" onSubmit={searchProducts}>
+    <form className="flex w-full justify-center items-center" onSubmit={searchProducts}>
       <input
         type="text"
         value={searchInput}
         onChange={(e) => setSearchInput(e.target.value)}
-        placeholder="Type here"
-        className="bg-gray-50 input input-bordered w-[70%] rounded-r-none outline-none focus:outline-none max-sm:w-full"
+        placeholder="Search for products..."
+        className="flex-grow px-4 py-2 bg-white/10 border border-gray-600 text-white placeholder-gray-400 rounded-l-full focus:outline-none focus:border-yellow-500 transition-all duration-200 max-sm:w-full"
+        style={{ maxWidth: '70%' }} // Keep the width constraint
       />
-      <button type="submit" className="btn bg-blue-500 text-white rounded-l-none rounded-r-xl hover:bg-blue-600">
+      <button
+        type="submit"
+        className="px-6 py-2 bg-yellow-500 text-gray-900 font-semibold rounded-r-full hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-opacity-50 transition-all duration-200 shadow-md hover:shadow-lg"
+      >
         Search
       </button>
     </form>

@@ -139,20 +139,22 @@ const DashboardProductDetails = ({ params }: DashboardProductDetailsProps) => {
   }, [fetchCategories, fetchProductData]);
 
   return (
-    <div className="bg-white flex justify-start max-w-screen-2xl mx-auto xl:h-full max-xl:flex-col max-xl:gap-y-5">
+    <div className="flex justify-start max-w-screen-2xl mx-auto xl:h-full max-xl:flex-col max-xl:gap-y-5 relative z-10">
       <DashboardSidebar />
-      <div className="flex flex-col gap-y-7 xl:ml-5 w-full max-xl:px-5">
-        <h1 className="text-3xl font-semibold">Product details</h1>
+      <div className="flex flex-col gap-y-7 xl:ml-5 w-full max-xl:px-5 p-4 rounded-lg
+                  bg-white/10 backdrop-blur-md border border-white/20 shadow-lg text-white
+                  dark:bg-black/20 dark:border-gray-700">
+        <h1 className="text-3xl font-semibold text-white">Product details</h1>
         {/* Product name input div - start */}
         
         <div>
           <label className="form-control w-full max-w-xs">
             <div className="label">
-              <span className="label-text">Product name:</span>
+              <span className="label-text text-white">Product name:</span>
             </div>
             <input
               type="text"
-              className="input input-bordered w-full max-w-xs"
+              className="input input-bordered w-full max-w-xs bg-white/10 border-white/20 text-white placeholder-gray-300 focus:ring-blue-500 dark:bg-black/20 dark:border-gray-700"
               value={product?.title || ""}
               onChange={(e) =>
                 setProduct({ ...product!, title: e.target.value })
@@ -166,11 +168,11 @@ const DashboardProductDetails = ({ params }: DashboardProductDetailsProps) => {
         <div>
           <label className="form-control w-full max-w-xs">
             <div className="label">
-              <span className="label-text">Product price:</span>
+              <span className="label-text text-white">Product price:</span>
             </div>
             <input
               type="text"
-              className="input input-bordered w-full max-w-xs"
+              className="input input-bordered w-full max-w-xs bg-white/10 border-white/20 text-white placeholder-gray-300 focus:ring-blue-500 dark:bg-black/20 dark:border-gray-700"
               value={product?.price || ""}
               onChange={(e) =>
                 setProduct({ ...product!, price: Number(e.target.value) })
@@ -183,11 +185,11 @@ const DashboardProductDetails = ({ params }: DashboardProductDetailsProps) => {
         <div>
           <label className="form-control w-full max-w-xs">
             <div className="label">
-              <span className="label-text">Manufacturer:</span>
+              <span className="label-text text-white">Manufacturer:</span>
             </div>
             <input
               type="text"
-              className="input input-bordered w-full max-w-xs"
+              className="input input-bordered w-full max-w-xs bg-white/10 border-white/20 text-white placeholder-gray-300 focus:ring-blue-500 dark:bg-black/20 dark:border-gray-700"
               value={product?.manufacturer || ""}
               onChange={(e) =>
                 setProduct({ ...product!, manufacturer: e.target.value })
@@ -201,11 +203,11 @@ const DashboardProductDetails = ({ params }: DashboardProductDetailsProps) => {
         <div>
           <label className="form-control w-full max-w-xs">
             <div className="label">
-              <span className="label-text">Slug:</span>
+              <span className="label-text text-white">Slug:</span>
             </div>
             <input
               type="text"
-              className="input input-bordered w-full max-w-xs"
+              className="input input-bordered w-full max-w-xs bg-white/10 border-white/20 text-white placeholder-gray-300 focus:ring-blue-500 dark:bg-black/20 dark:border-gray-700"
               value={
                 product?.slug ? convertSlugToURLFriendly(product?.slug) : ""
               }
@@ -224,10 +226,10 @@ const DashboardProductDetails = ({ params }: DashboardProductDetailsProps) => {
         <div>
           <label className="form-control w-full max-w-xs">
             <div className="label">
-              <span className="label-text">Is product in stock?</span>
+              <span className="label-text text-white">Is product in stock?</span>
             </div>
             <select
-              className="select select-bordered"
+              className="select select-bordered bg-white/10 border-white/20 text-white focus:ring-blue-500 dark:bg-black/20 dark:border-gray-700"
               value={product?.inStock ?? 1}
               onChange={(e) => {
                 setProduct({ ...product!, inStock: Number(e.target.value) });
@@ -243,10 +245,10 @@ const DashboardProductDetails = ({ params }: DashboardProductDetailsProps) => {
         <div>
           <label className="form-control w-full max-w-xs">
             <div className="label">
-              <span className="label-text">Category:</span>
+              <span className="label-text text-white">Category:</span>
             </div>
             <select
-              className="select select-bordered"
+              className="select select-bordered bg-white/10 border-white/20 text-white focus:ring-blue-500 dark:bg-black/20 dark:border-gray-700"
               value={product?.categoryId || ""}
               onChange={(e) =>
                 setProduct({
@@ -268,24 +270,29 @@ const DashboardProductDetails = ({ params }: DashboardProductDetailsProps) => {
 
         {/* Main image file upload div - start */}
         <div>
-          <input
-            type="file"
-            className="file-input file-input-bordered file-input-lg w-full max-w-sm"
-            onChange={(e) => {
-              // @ts-ignore
-              const selectedFile = e.target.files[0];
+          <label className="form-control w-full max-w-sm">
+            <div className="label">
+              <span className="label-text text-white">Main Image:</span>
+            </div>
+            <input
+              type="file"
+              className="file-input file-input-bordered w-full max-w-sm bg-white/10 border-white/20 text-white focus:ring-blue-500 dark:bg-black/20 dark:border-gray-700"
+              onChange={(e) => {
+                // @ts-ignore
+                const selectedFile = e.target.files[0];
 
-              if (selectedFile) {
-                uploadFile(selectedFile);
-                setProduct({ ...product!, mainImage: selectedFile.name });
-              }
-            }}
-          />
+                if (selectedFile) {
+                  uploadFile(selectedFile);
+                  setProduct({ ...product!, mainImage: selectedFile.name });
+                }
+              }}
+            />
+          </label>
           {product?.mainImage && (
             <Image
               src={`/` + product?.mainImage}
               alt={product?.title}
-              className="w-auto h-auto mt-2"
+              className="w-auto h-auto mt-2 rounded-lg border border-white/20 shadow-lg"
               width={100}
               height={100}
             />
@@ -302,7 +309,7 @@ const DashboardProductDetails = ({ params }: DashboardProductDetailsProps) => {
                 alt="product image"
                 width={100}
                 height={100}
-                className="w-auto h-auto"
+                className="w-auto h-auto rounded-lg border border-white/20 shadow-lg"
               />
             ))}
         </div>
@@ -311,10 +318,10 @@ const DashboardProductDetails = ({ params }: DashboardProductDetailsProps) => {
         <div>
           <label className="form-control">
             <div className="label">
-              <span className="label-text">Product description:</span>
+              <span className="label-text text-white">Product description:</span>
             </div>
             <textarea
-              className="textarea textarea-bordered h-24"
+              className="textarea textarea-bordered h-24 bg-white/10 border-white/20 text-white placeholder-gray-300 focus:ring-blue-500 dark:bg-black/20 dark:border-gray-700"
               value={product?.description || ""}
               onChange={(e) =>
                 setProduct({ ...product!, description: e.target.value })
@@ -328,20 +335,22 @@ const DashboardProductDetails = ({ params }: DashboardProductDetailsProps) => {
           <button
             type="button"
             onClick={updateProduct}
-            className="uppercase bg-blue-500 px-10 py-5 text-lg border border-black border-gray-300 font-bold text-white shadow-sm hover:bg-blue-600 hover:text-white focus:outline-none focus:ring-2"
+            className="uppercase px-10 py-5 text-lg font-bold shadow-sm focus:outline-none focus:ring-2
+                       bg-blue-500/20 backdrop-blur-md border border-blue-500/30 text-white hover:bg-blue-500/30 hover:border-blue-500/50 transition-all duration-300"
           >
             Update product
           </button>
           <button
             type="button"
-            className="uppercase bg-red-600 px-10 py-5 text-lg border border-black border-gray-300 font-bold text-white shadow-sm hover:bg-red-700 hover:text-white focus:outline-none focus:ring-2"
+            className="uppercase px-10 py-5 text-lg font-bold shadow-sm focus:outline-none focus:ring-2
+                       bg-red-500/20 backdrop-blur-md border border-red-500/30 text-white hover:bg-red-500/30 hover:border-red-500/50 transition-all duration-300"
             onClick={deleteProduct}
           >
             Delete product
           </button>
         </div>
         {/* Action buttons div - end */}
-        <p className="text-xl max-sm:text-lg text-error">
+        <p className="text-xl max-sm:text-lg text-red-400">
           To delete the product you first need to delete all its records in
           orders (customer_order_product table).
         </p>

@@ -3,7 +3,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import { FaBell } from 'react-icons/fa6';
-import { useUnreadCount } from '@/hooks/useNotifications';
+import { useUnreadCount, useNotifications } from '@/hooks/useNotifications'; // Import useNotifications
 import { useSession } from 'next-auth/react';
 
 interface NotificationBellProps {
@@ -12,7 +12,8 @@ interface NotificationBellProps {
 
 const NotificationBell: React.FC<NotificationBellProps> = ({ className = "" }) => {
   const { data: session } = useSession();
-  const { unreadCount } = useUnreadCount();
+  const { unreadCount, refreshUnreadCount } = useUnreadCount();
+  const { markAllUserNotificationsAsRead } = useNotifications(); // Use the new hook
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -38,7 +39,7 @@ const NotificationBell: React.FC<NotificationBellProps> = ({ className = "" }) =
       {/* Notification Bell Button */}
       <button
         onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-        className="relative p-2 text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded-full transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1"
+        className="relative p-2 text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded-full transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-1"
         aria-label={`Notifications ${unreadCount > 0 ? `(${unreadCount} unread)` : ''}`}
       >
         <FaBell className="w-6 h-6" />
@@ -68,9 +69,9 @@ const NotificationBell: React.FC<NotificationBellProps> = ({ className = "" }) =
           <div className="p-4 border-b border-gray-200">
             <div className="flex space-x-2">
               <Link
-                href="/notifications"
+                href="/notification"
                 onClick={() => setIsDropdownOpen(false)}
-                className="flex-1 px-3 py-2 text-sm font-medium text-center text-blue-600 bg-blue-50 border border-blue-200 rounded-md hover:bg-blue-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 transition-colors"
+                className="flex-1 px-3 py-2 text-sm font-medium text-center text-indigo-600 bg-indigo-50 border border-indigo-200 rounded-md hover:bg-indigo-100 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-1 transition-colors"
               >
                 View All
               </Link>
@@ -78,8 +79,8 @@ const NotificationBell: React.FC<NotificationBellProps> = ({ className = "" }) =
               {unreadCount > 0 && (
                 <button
                   className="flex-1 px-3 py-2 text-sm font-medium text-center text-gray-600 bg-gray-50 border border-gray-200 rounded-md hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-1 transition-colors"
-                  onClick={() => {
-                    // TODO: Implement mark all as read functionality
+                  onClick={async () => {
+                    await markAllUserNotificationsAsRead();
                     setIsDropdownOpen(false);
                   }}
                 >
@@ -104,9 +105,9 @@ const NotificationBell: React.FC<NotificationBellProps> = ({ className = "" }) =
                     You have {unreadCount} unread notification{unreadCount !== 1 ? 's' : ''}
                   </p>
                   <Link
-                    href="/notifications"
+                    href="/notification"
                     onClick={() => setIsDropdownOpen(false)}
-                    className="inline-flex items-center px-3 py-1 text-xs font-medium text-blue-600 bg-blue-50 border border-blue-200 rounded-full hover:bg-blue-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 transition-colors"
+                    className="inline-flex items-center px-3 py-1 text-xs font-medium text-indigo-600 bg-indigo-50 border border-indigo-200 rounded-full hover:bg-indigo-100 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-1 transition-colors"
                   >
                     View in Notification Center →
                   </Link>
@@ -118,9 +119,9 @@ const NotificationBell: React.FC<NotificationBellProps> = ({ className = "" }) =
           {/* Footer */}
           <div className="p-3 bg-gray-50 border-t border-gray-200">
             <Link
-              href="/notifications"
+              href="/notification"
               onClick={() => setIsDropdownOpen(false)}
-              className="block w-full text-center text-sm text-gray-600 hover:text-blue-600 transition-colors"
+              className="block w-full text-center text-sm text-gray-600 hover:text-indigo-600 transition-colors"
             >
               Go to Notification Center
             </Link>

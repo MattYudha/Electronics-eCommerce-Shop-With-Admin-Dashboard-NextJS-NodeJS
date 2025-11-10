@@ -1,69 +1,107 @@
-// *********************
-// Role of the component: Product item component 
-// Name of the component: ProductItem.tsx
-// Developer: Aleksandar Kuzmanovic
-// Version: 1.0
-// Component call: <ProductItem product={product} color={color} />
-// Input parameters: { product: Product; color: string; }
-// Output: Product item component that contains product image, title, link to the single product page, price, button...
-// *********************
+"use client";
 
-import Image from "next/image";
-import React from "react";
-import Link from "next/link";
+import Image from 'next/image';
+import Link from 'next/link';
+import { sanitize } from '@/lib/sanitize';
+import CustomButton from './CustomButton';
+import { useCart } from '@/hooks/useCart'; // Import useCart
+import toast from 'react-hot-toast'; // Import toast
+import { useSession } from 'next-auth/react'; // Import useSession
+import { useRouter } from 'next/navigation'; // Import useRouter
 
-import { sanitize } from "@/lib/sanitize";
+export type Product = {
+  id: string;
+  slug: string;
+  mainImage: string | null;
+  title: string;
+  price: number;
+  description?: string | null;
+};
 
-const ProductItem = ({
-  product,
-  color,
-}: {
+type ProductItemProps = {
   product: Product;
   color: string;
-}) => {
-  return (
-    <div className="flex flex-col items-center gap-y-2">
-      <Link href={`/product/${product.slug}`}>
-        <Image
-          src={
-            product.mainImage
-              ? `/${product.mainImage}`
-              : "/product_placeholder.jpg"
-          }
-          width="0"
-          height="0"
-          sizes="100vw"
-          className="w-auto h-[300px]"
-          alt={sanitize(product?.title) || "Product image"}
-        />
-      </Link>
-      <Link
-        href={`/product/${product.slug}`}
-        className={
-          color === "black"
-            ? `text-xl text-black font-normal mt-2 uppercase`
-            : `text-xl text-white font-normal mt-2 uppercase`
-        }
-      >
-        {sanitize(product.title)}
-      </Link>
-      <p
-        className={
-          color === "black"
-            ? "text-lg text-black font-semibold"
-            : "text-lg text-white font-semibold"
-        }
-      >
-        ${product.price}
-      </p>
+};
 
-  
-      <Link
-        href={`/product/${product?.slug}`}
-        className="block flex justify-center items-center w-full uppercase bg-white px-0 py-2 text-base border border-black border-gray-300 font-bold text-blue-600 shadow-sm hover:bg-black hover:bg-gray-100 focus:outline-none focus:ring-2"
-      >
-        <p>View product</p>
-      </Link>
+const ProductItem = ({ product, color }: ProductItemProps) => {
+  const imageUrl = product.mainImage
+    ? `/${product.mainImage}`
+    : '/product_placeholder.jpg';
+
+  const { addToCart } = useCart(); // Initialize useCart
+  const { data: session } = useSession(); // Get session
+  const router = useRouter(); // Get router
+
+  const handleBuyClick = () => {
+    if (!session?.user) {
+      toast.error("Anda harus login terlebih dahulu.");
+      router.push('/login');
+      return;
+    }
+    // If logged in, navigate to the product detail page (assuming "page selanjutnya" means this)
+    router.push(`/product/${product.slug}`);
+  };
+
+  return (
+    <div className="group relative w-full bg-white/10 dark:bg-gray-800/10 rounded-3xl overflow-hidden border border-white/20 dark:border-gray-700/20 hover:border-grilli-gold backdrop-blur-md shadow-xl transition-all duration-300">
+      {/* Image Section */}
+      <div className="relative bg-gradient-to-br from-gray-50/10 to-gray-100/10 dark:from-gray-700/10 dark:to-gray-900/10 p-8 flex items-center justify-center h-48">
+        <Link
+          href={`/product/${product.slug}`}
+          className="relative w-full h-full flex items-center justify-center"
+        >
+          <Image
+            src={imageUrl}
+            alt={sanitize(product?.title) || 'Product image'}
+            width={160}
+            height={160}
+            className="object-contain max-h-full w-auto group-hover:scale-110 transition-transform duration-500"
+          />
+        </Link>
+      </div>
+
+      {/* Content Section */}
+      <div className="p-5 space-y-3">
+        {/* Title */}
+        <Link href={`/product/${product.slug}`}>
+          <h3 className="text-lg font-semibold text-gray-700 dark:text-white line-clamp-2 min-h-[3.5rem] group-hover:text-grilli-gold transition-colors duration-200">
+            {sanitize(product.title)}
+          </h3>
+        </Link>
+
+        {/* Description */}
+        {product.description && (
+          <p className="text-sm text-gray-300 line-clamp-2 min-h-[2.5rem]">
+            {product.description.substring(0, 80) + '...'}
+          </p>
+        )}
+
+        {/* Price & Button */}
+        <div className="flex items-center justify-between pt-2 border-t border-white/20 dark:border-gray-700/20">
+          <div className="flex flex-col">
+            <span className="text-xs text-gray-700 dark:text-gray-300 font-medium">Price</span>
+            <span className="text-2xl font-bold text-grilli-gold">
+              ${product.price}
+            </span>
+          </div>
+
+          <div className="flex gap-2"> {/* Added a div to group buttons */}
+            <CustomButton
+              onClick={handleBuyClick}
+              className="px-4 h-[42px] text-sm font-semibold shadow-md bg-grilli-gold text-black hover:bg-grilli-gold/80 transition-colors duration-200 rounded-full"
+            >
+              Buy
+            </CustomButton>
+            <Link href={`/product/${product.slug}`}>
+              <CustomButton
+                className="px-4 h-[42px] text-sm font-semibold shadow-md bg-transparent border border-grilli-gold text-grilli-gold hover:bg-grilli-gold hover:text-black transition-colors duration-200 rounded-full"
+              >
+                View
+              </CustomButton>
+            </Link>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };

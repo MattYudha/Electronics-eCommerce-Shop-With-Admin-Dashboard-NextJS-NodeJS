@@ -14,19 +14,19 @@ import { FaHouse } from "react-icons/fa6";
 
 const Breadcrumb = () => {
   return (
-    <div className="text-lg breadcrumbs pb-10 py-5 max-sm:text-base">
+    <div className="text-lg breadcrumbs pb-10 py-5 max-sm:text-base text-gray-800 dark:text-gray-200"> {/* Added dark mode text color */}
       <ul>
         <li>
-          <Link href="/">
+          <Link href="/" className="text-gray-800 dark:text-gray-200 hover:text-blue-600 dark:hover:text-blue-400"> {/* Added dark mode text color and hover */}
             <FaHouse className="mr-2" />
             Home
           </Link>
         </li>
         <li>
-          <Link href="/shop">Shop</Link>
+          <Link href="/shop" className="text-gray-800 dark:text-gray-200 hover:text-blue-600 dark:hover:text-blue-400">Shop</Link> {/* Added dark mode text color and hover */}
         </li>
         <li>
-          <Link href="/shop">All products</Link>
+          <Link href="/shop" className="text-gray-800 dark:text-gray-200 hover:text-blue-600 dark:hover:text-blue-400">All products</Link> {/* Added dark mode text color and hover */}
         </li>
       </ul>
     </div>

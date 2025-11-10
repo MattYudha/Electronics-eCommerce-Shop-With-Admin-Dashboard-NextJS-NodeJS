@@ -2,11 +2,13 @@ import { CategoryMenu, Hero, Incentives, IntroducingSection, Newsletter, Product
 
 export default function Home() {
   return (
-    <>
-    <Hero />
-    <IntroducingSection />
-    <CategoryMenu />
-    <ProductsSection />
-    </>
+    <div className="bg-white text-black dark:bg-gray-800 dark:text-white">
+      <Hero />
+      <IntroducingSection />
+      <div className="relative border-t-2 border-b-2 border-grilli-gold"></div>
+      <CategoryMenu />
+      <div className="relative border-t-2 border-b-2 border-grilli-gold"></div>
+      <ProductsSection />
+    </div>
   );
 }

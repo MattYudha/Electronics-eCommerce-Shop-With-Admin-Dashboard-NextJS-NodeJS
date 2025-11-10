@@ -44,7 +44,7 @@ const SingleProductPage = async ({ params }: SingleProductPageProps) => {
   }
 
   return (
-    <div className="bg-white">
+    <div className="bg-white dark:bg-gray-900">
       <div className="max-w-screen-2xl mx-auto">
         <div className="flex justify-center gap-x-16 pt-10 max-lg:flex-col items-center gap-y-5 px-5">
           <div>
@@ -53,7 +53,7 @@ const SingleProductPage = async ({ params }: SingleProductPageProps) => {
               width={500}
               height={500}
               alt="main image"
-              className="w-auto h-auto"
+              className="w-auto h-auto border border-gray-200 dark:border-gray-700"
             />
             <div className="flex justify-around mt-5 flex-wrap gap-y-1 max-[500px]:justify-center max-[500px]:gap-x-1">
               {images?.map((imageItem: ImageItem, key: number) => (
@@ -63,12 +63,12 @@ const SingleProductPage = async ({ params }: SingleProductPageProps) => {
                   width={100}
                   height={100}
                   alt="laptop image"
-                  className="w-auto h-auto"
+                  className="w-auto h-auto border border-gray-200 dark:border-gray-700"
                 />
               ))}
             </div>
           </div>
-          <div className="flex flex-col gap-y-7 text-black max-[500px]:text-center">
+          <div className="flex flex-col gap-y-7 text-gray-900 dark:text-white max-[500px]:text-center">
         
             <h1 className="text-3xl">{sanitize(product?.title)}</h1>
             <p className="text-xl font-semibold">${product?.price}</p>
