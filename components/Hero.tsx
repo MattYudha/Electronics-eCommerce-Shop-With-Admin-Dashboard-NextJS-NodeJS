@@ -61,6 +61,14 @@ const slides = [
     buttonText: 'View Our Menu',
     buttonLink: '/shop',
   },
+  {
+    bgImage: '/assets/eloqo.jpg', // New image from user request
+    subtitle: 'Discover Eloqo',
+    title: 'Experience the <br/> Future of Shopping',
+    text: 'Explore our curated collection of electronics',
+    buttonText: 'Shop Now',
+    buttonLink: '/shop',
+  },
 ];
 
 const Hero = () => {

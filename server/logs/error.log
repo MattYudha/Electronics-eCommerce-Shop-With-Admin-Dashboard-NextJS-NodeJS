@@ -493,3 +493,4 @@
 ::1 - - [11/Nov/2025:16:37:01 +0000] "GET /api/slugs/Eloqo-Rasa-Usus HTTP/1.1" 429 93 "-" "node" reqId=MeD4Zz6j userId=anonymous
 ::1 - - [11/Nov/2025:16:37:01 +0000] "GET /api/images/undefined HTTP/1.1" 429 93 "-" "node" reqId=-Tagv7mN userId=anonymous
 ::1 - - [11/Nov/2025:16:37:04 +0000] "GET /api/users/email/admin@gmail.com HTTP/1.1" 429 93 "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36" reqId=qhluD5aY userId=anonymous
+::1 - - [11/Nov/2025:16:51:44 +0000] "GET /api/users/email/admin@gmail.com HTTP/1.1" 429 96 "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36" reqId=ui3WCUAm userId=anonymous
