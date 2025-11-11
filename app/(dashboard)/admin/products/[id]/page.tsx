@@ -26,28 +26,65 @@ const DashboardProductDetails = ({ params }: DashboardProductDetailsProps) => {
 
   // functionality for deleting product
   const deleteProduct = async () => {
-    const requestOptions = {
-      method: "DELETE",
-    };
-    apiClient
-      .delete(`/api/products/${id}`, requestOptions)
-      .then((response) => {
-        if (response.status !== 204) {
-          if (response.status === 400) {
-            toast.error(
-              "Cannot delete the product because of foreign key constraint"
-            );
-          } else {
-            throw Error("There was an error while deleting product");
-          }
+    if (!confirm("Are you sure you want to delete this product? This action cannot be undone.")) {
+      return;
+    }
+    try {
+      const response = await apiClient.delete(`/api/products/${id}`);
+      if (response.status !== 204) {
+        if (response.status === 400) {
+          toast.error(
+            "Cannot delete the product because of foreign key constraint"
+          );
         } else {
-          toast.success("Product deleted successfully");
-          router.push("/admin/products");
+          throw Error("There was an error while deleting product");
         }
-      })
-      .catch((error) => {
-        toast.error("There was an error while deleting product");
+      } else {
+        toast.success("Product deleted successfully");
+        router.push("/admin/products");
+      }
+    } catch (error) {
+      toast.error("There was an error while deleting product");
+    }
+  };
+
+  // functionality for deleting main image
+  const deleteMainImage = async () => {
+    if (!product?.mainImage) {
+      toast.error("No main image to delete.");
+      return;
+    }
+    if (!confirm("Are you sure you want to delete the main image?")) {
+      return;
+    }
+    try {
+      // Use fetch directly to send body with DELETE request
+      const response = await fetch(`${apiClient.baseUrl}/api/main-image/${id}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ imagePath: product.mainImage }), // Send the image path
       });
+
+      if (response.ok) {
+        toast.success("Main image deleted successfully!");
+        setProduct((prevProduct) => ({ ...prevProduct!, mainImage: null })); // Clear main image from state
+      } else {
+        let errorMessage = 'Unknown error';
+        const contentType = response.headers.get('content-type');
+        if (contentType && contentType.includes('application/json')) {
+          const errorData = await response.json();
+          errorMessage = errorData.message || errorData.error || errorMessage;
+        } else {
+          errorMessage = await response.text();
+        }
+        toast.error(`Failed to delete main image: ${errorMessage}`);
+      }
+    } catch (error) {
+      console.error("Error deleting main image:", error);
+      toast.error("An error occurred while deleting the main image.");
+    }
   };
 
   // functionality for updating product
@@ -82,24 +119,24 @@ const DashboardProductDetails = ({ params }: DashboardProductDetailsProps) => {
   };
 
   // functionality for uploading main image file
-  const uploadFile = async (file: any) => {
+  const uploadFile = async (file: File) => {
     const formData = new FormData();
     formData.append("uploadedFile", file);
+    formData.append("productID", id); // Ensure product ID is sent
 
     try {
-      const response = await apiClient.post("/api/main-image", {
-        method: "POST",
-        body: formData,
-      });
-
+      const response = await apiClient.post("/api/main-image", formData); // apiClient handles method and body
       if (response.ok) {
         const data = await response.json();
+        toast.success("Main image uploaded successfully!");
+        setProduct((prevProduct) => ({ ...prevProduct!, mainImage: data.imagePath })); // Update with server-returned path
       } else {
-        toast.error("File upload unsuccessful.");
+        const errorData = await response.json();
+        toast.error(`File upload unsuccessful: ${errorData.message || 'Unknown error'}`);
       }
     } catch (error) {
-      console.error("There was an error while during request sending:", error);
-      toast.error("There was an error during request sending");
+      console.error("Error during image upload:", error);
+      toast.error("There was an error during image upload.");
     }
   };
 
@@ -278,24 +315,31 @@ const DashboardProductDetails = ({ params }: DashboardProductDetailsProps) => {
               type="file"
               className="file-input file-input-bordered w-full max-w-sm bg-white/10 border-white/20 text-white focus:ring-blue-500 dark:bg-black/20 dark:border-gray-700"
               onChange={(e) => {
-                // @ts-ignore
-                const selectedFile = e.target.files[0];
+                const selectedFile = e.target.files?.[0]; // Use optional chaining and File type
 
                 if (selectedFile) {
                   uploadFile(selectedFile);
-                  setProduct({ ...product!, mainImage: selectedFile.name });
                 }
               }}
             />
           </label>
           {product?.mainImage && (
-            <Image
-              src={`/` + product?.mainImage}
-              alt={product?.title}
-              className="w-auto h-auto mt-2 rounded-lg border border-white/20 shadow-lg"
-              width={100}
-              height={100}
-            />
+            <div className="flex items-center gap-2 mt-2">
+              <Image
+                src={`/${product.mainImage.replace(/^\//, '')}`}
+                alt={product?.title}
+                className="w-auto h-auto rounded-lg border border-white/20 shadow-lg"
+                width={100}
+                height={100}
+              />
+              <CustomButton
+                buttonType="button"
+                onClick={deleteMainImage}
+                className="bg-red-500/20 hover:bg-red-500/30 text-red-400 hover:text-white font-bold py-2 px-4 rounded-lg transition duration-300 ease-in-out"
+              >
+                Delete
+              </CustomButton>
+            </div>
           )}
         </div>
         {/* Main image file upload div - end */}
@@ -304,7 +348,7 @@ const DashboardProductDetails = ({ params }: DashboardProductDetailsProps) => {
           {otherImages &&
             otherImages.map((image) => (
               <Image
-                src={`/${image.image}`}
+                src={`/${image.image.replace(/^\//, '')}`}
                 key={nanoid()}
                 alt="product image"
                 width={100}

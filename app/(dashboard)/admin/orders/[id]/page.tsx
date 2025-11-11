@@ -273,7 +273,7 @@ const AdminSingleOrder = () => {
                 {orderProducts?.map((op) => (
                   <div key={op.id} className="flex items-center gap-4 p-2 rounded-lg hover:bg-gray-500/10">
                     <Image
-                      src={op.product?.mainImage ? `/${op.product.mainImage}` : '/product_placeholder.jpg'}
+                      src={op.product?.mainImage ? `/${op.product.mainImage.replace(/^\//, '')}` : '/product_placeholder.jpg'}
                       alt={op.product?.title}
                       width={64}
                       height={64}

@@ -4,7 +4,7 @@ import Link from 'next/link';
 const Footer = () => {
   return (
     <footer
-      className="relative py-20 px-4 sm:px-6 lg:px-8 text-center bg-cover bg-center font-dm-sans bg-white text-black dark:bg-smoky-black-grilli dark:text-white"
+      className="relative py-10 px-4 sm:px-6 lg:px-8 text-center bg-cover bg-center font-dm-sans bg-white text-black dark:bg-smoky-black-grilli dark:text-white"
       style={{ backgroundImage: "url('/footer-bg.jpg')" }}
     >
       {/* Overlay */}
@@ -16,13 +16,13 @@ const Footer = () => {
           {/* Column 1: Brand and Subscribe */}
           <div className="space-y-6 flex flex-col items-center">
             <Link href="/" className="text-4xl font-forum text-gold-crayola">
-              Grilli
+              ELOQO.CO
             </Link>
             <address className="not-italic">
-              Restaurant St, Delicious City, London 9578, UK
+              sukapura, Jalan mangga dua no 16 rt03/02
             </address>
-            <a href="mailto:booking@grilli.com" className="hover:text-gold-crayola">booking@grilli.com</a>
-            <a href="tel:+88123123456" className="hover:text-gold-crayola">Booking Request : +88-123-123456</a>
+            <a href="mailto:eloqoco2025@gmail.com" className="hover:text-gold-crayola">eloqoco2025@gmail.com</a>
+            <a href="tel:+6287871563774" className="hover:text-gold-crayola">Contact Order : +62 878-7156-3774</a>
             <p>Open : 09:00 am - 01:00 pm</p>
             
             <div className="w-24 mx-auto my-4">
@@ -75,7 +75,7 @@ const Footer = () => {
 
         <div className="mt-20 pt-8 border-t border-gray-700">
           <p className="text-gray-400">
-            &copy; 2024 Grilli. All Rights Reserved | Crafted by <a href="https://github.com/codewithsadee" target="_blank" rel="noopener noreferrer" className="text-gold-crayola hover:underline">codewithsadee</a>
+            &copy; 2025 ELOQO.CO. All Rights Reserved | Crafted by <a href="https://github.com/codewithsadee" target="_blank" rel="noopener noreferrer" className="text-gold-crayola hover:underline">codewithsadee</a>
           </p>
         </div>
       </div>

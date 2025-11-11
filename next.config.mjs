@@ -10,8 +10,8 @@ const nextConfig = {
       {
         protocol: backendUrl ? backendUrl.protocol.replace(':', '') : 'http',
         hostname: backendUrl ? backendUrl.hostname : 'localhost',
-        port: backendUrl ? backendUrl.port : '5000',
-        pathname: '/uploads/**', // Izinkan semua gambar dari folder /uploads
+        port: backendUrl ? backendUrl.port : '3001', // Corrected port
+        pathname: '/**', // Allow all paths
       },
     ],
   },

@@ -19,6 +19,7 @@ interface CustomButtonProps {
   paddingY?: number; // Make optional
   customWidth?: string; // Make optional
   textSize?: string; // Make optional
+  disabled?: boolean; // Added disabled prop
 }
 
 const CustomButton = ({
@@ -30,6 +31,7 @@ const CustomButton = ({
   paddingY = 2, // Default padding
   customWidth = 'no', // Default width
   textSize = 'base', // Default text size
+  disabled = false, // Default to false
 }: CustomButtonProps) => {
   const baseClasses = `${customWidth !== 'no' && `w-${customWidth}`} uppercase px-${paddingX} py-${paddingY} text-${textSize} font-bold shadow-sm focus:outline-none focus:ring-2`;
 
@@ -38,6 +40,7 @@ const CustomButton = ({
       type={buttonType}
       onClick={onClick}
       className={`${baseClasses} ${className}`} // Apply external className
+      disabled={disabled} // Pass disabled prop to button
     >
       {children}
     </button>

@@ -20,8 +20,7 @@ const IntroducingSection = () => {
       <div className="absolute inset-0 bg-black opacity-60"></div>
       <div className="relative text-center flex flex-col gap-y-5 items-center">
         <h2 className="text-white text-8xl font-extrabold text-center mb-2 max-md:text-6xl max-[480px]:text-4xl font-forum">
-          INTRODUCING <span className="text-grilli-gold">SINGI</span>
-          <span className="text-white">TRONIC</span>
+          INTRODUCING <span className="text-grilli-gold">ELOQO</span>
         </h2>
         <div>
           <p className="text-white text-center text-2xl font-semibold max-md:text-xl max-[480px]:text-base font-dm-sans">

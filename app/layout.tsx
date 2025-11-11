@@ -36,7 +36,7 @@ export default async function RootLayout({
             <Providers> {/* This now only contains Toaster */}
               <SessionTimeoutWrapper />
               <Header user={session?.user as user | null} />
-              <div className="pt-[80px] relative z-10">
+              <div className="pt-[80px] relative z-10 mb-20">
                 {children}
               </div>
               <Footer />

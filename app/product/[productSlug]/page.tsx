@@ -43,35 +43,43 @@ const SingleProductPage = async ({ params }: SingleProductPageProps) => {
     notFound();
   }
 
+  // Helper function to create a consistent, root-relative image path
+  const getImageUrl = (path: string | null | undefined) => {
+    if (!path) {
+      return "/product_placeholder.jpg";
+    }
+    // Ensures a single leading slash for a consistent root-relative path
+    return `/${path.replace(/^\//, '')}`;
+  };
+
   return (
-    <div className="bg-white dark:bg-gray-900">
-      <div className="max-w-screen-2xl mx-auto">
+    <div className="max-w-screen-2xl mx-auto p-8 rounded-3xl backdrop-blur-md bg-white/10 dark:bg-gray-800/10 shadow-xl border border-white/20 dark:border-gray-700/20">
         <div className="flex justify-center gap-x-16 pt-10 max-lg:flex-col items-center gap-y-5 px-5">
-          <div>
-            <Image
-              src={product?.mainImage ? `/${product?.mainImage}` : "/product_placeholder.jpg"}
-              width={500}
-              height={500}
-              alt="main image"
-              className="w-auto h-auto border border-gray-200 dark:border-gray-700"
-            />
+          <div className="p-8 rounded-3xl backdrop-blur-md bg-white/10 dark:bg-gray-800/10 shadow-xl border border-white/20 dark:border-gray-700/20">
+              <Image
+                src={getImageUrl(product?.mainImage)}
+                width={240}
+                height={160}
+                alt="main image"
+                className="w-auto h-auto object-contain mb-5 rounded-lg border border-white/20 dark:border-gray-700/20 shadow-md"
+              />
             <div className="flex justify-around mt-5 flex-wrap gap-y-1 max-[500px]:justify-center max-[500px]:gap-x-1">
               {images?.map((imageItem: ImageItem, key: number) => (
                 <Image
                   key={imageItem.imageID + key}
-                  src={`/${imageItem.image}`}
+                  src={getImageUrl(imageItem.image)}
                   width={100}
                   height={100}
                   alt="laptop image"
-                  className="w-auto h-auto border border-gray-200 dark:border-gray-700"
+                  className="w-auto h-auto rounded-md shadow-md border border-white/20 dark:border-gray-700/20 hover:border-grilli-gold transition-colors duration-200 cursor-pointer"
                 />
               ))}
             </div>
           </div>
-          <div className="flex flex-col gap-y-7 text-gray-900 dark:text-white max-[500px]:text-center">
+          <div className="flex flex-col gap-y-5 text-gray-900 dark:text-white max-[500px]:text-center">
         
-            <h1 className="text-3xl">{sanitize(product?.title)}</h1>
-            <p className="text-xl font-semibold">${product?.price}</p>
+            <h1 className="text-4xl font-bold text-grilli-gold">{sanitize(product?.title)}</h1>
+            <p className="text-3xl font-bold text-grilli-gold">${product?.price}</p>
             <StockAvailabillity stock={94} inStock={product?.inStock} />
             <SingleProductDynamicFields product={product} />
             <div className="flex flex-col gap-y-2 max-[500px]:items-center">
@@ -79,15 +87,15 @@ const SingleProductPage = async ({ params }: SingleProductPageProps) => {
               <p className="text-lg">
                 SKU: <span className="ml-1">abccd-18</span>
               </p>
-              <div className="text-lg flex gap-x-2">
-                <span>Share:</span>
-                <div className="flex items-center gap-x-1 text-2xl">
-                  <FaSquareFacebook />
-                  <FaSquareXTwitter />
-                  <FaSquarePinterest />
+              <div className="text-lg flex gap-x-2 items-center">
+                <span className="text-gray-400 dark:text-gray-300">Share:</span>
+                <div className="flex items-center gap-x-2 text-3xl">
+                  <FaSquareFacebook className="text-gray-500 dark:text-gray-400 hover:text-grilli-gold transition-colors duration-200 cursor-pointer" />
+                  <FaSquareXTwitter className="text-gray-500 dark:text-gray-400 hover:text-grilli-gold transition-colors duration-200 cursor-pointer" />
+                  <FaSquarePinterest className="text-gray-500 dark:text-gray-400 hover:text-grilli-gold transition-colors duration-200 cursor-pointer" />
                 </div>
               </div>
-              <div className="flex gap-x-2">
+              <div className="flex gap-x-2 p-2 rounded-md bg-white/5 dark:bg-gray-800/5 border border-white/10 dark:border-gray-700/10 shadow-sm">
                 <Image
                   src="/visa.svg"
                   width={50}
@@ -137,7 +145,6 @@ const SingleProductPage = async ({ params }: SingleProductPageProps) => {
         <div className="py-16">
           <ProductTabs product={product} />
         </div>
-      </div>
     </div>
   );
 };

@@ -5,7 +5,7 @@ interface Product {
   price: number;
   rating: number;
   description: string;
-  mainImage: string;
+  mainImage: string | null;
   manufacturer: string;
   categoryId: string;
   category: { name: string } | null;

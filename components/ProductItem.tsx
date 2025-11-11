@@ -24,8 +24,9 @@ type ProductItemProps = {
 };
 
 const ProductItem = ({ product, color }: ProductItemProps) => {
+  // Create a consistent, root-relative image path
   const imageUrl = product.mainImage
-    ? `/${product.mainImage}`
+    ? `/${product.mainImage.replace(/^\//, '')}` // Ensures a single leading slash
     : '/product_placeholder.jpg';
 
   const { addToCart } = useCart(); // Initialize useCart
@@ -43,7 +44,7 @@ const ProductItem = ({ product, color }: ProductItemProps) => {
   };
 
   return (
-    <div className="group relative w-full bg-white/10 dark:bg-gray-800/10 rounded-3xl overflow-hidden border border-white/20 dark:border-gray-700/20 hover:border-grilli-gold backdrop-blur-md shadow-xl transition-all duration-300">
+    <div className="group relative w-full bg-white/10 dark:bg-gray-800/10 rounded-3xl overflow-hidden border border-white/20 dark:border-gray-700/20 hover:border-grilli-gold backdrop-blur-md shadow-2xl hover:shadow-2xl hover:-translate-y-1 transition-all duration-300">
       {/* Image Section */}
       <div className="relative bg-gradient-to-br from-gray-50/10 to-gray-100/10 dark:from-gray-700/10 dark:to-gray-900/10 p-8 flex items-center justify-center h-48">
         <Link
