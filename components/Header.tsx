@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
+import Image from "next/image";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
@@ -81,7 +82,8 @@ const Header = ({ user }: HeaderProps) => {
         <div className="container mx-auto px-4 md:px-6 flex items-center justify-between">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2">
-            <h1 className="text-3xl font-bold text-white font-['Forum']">
+            <Image src="/assets/logo.png" alt="Logo" width={64} height={64} className="h-16 w-16 mb-1" />
+            <h1 className="text-3xl font-bold text-white font-['Forum'] mb-1">
               <span className="text-yellow-500">ELOQO</span>
               <span className="text-white">.CO</span>
             </h1>

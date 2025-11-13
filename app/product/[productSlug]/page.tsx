@@ -95,48 +95,41 @@ const SingleProductPage = async ({ params }: SingleProductPageProps) => {
                   <FaSquarePinterest className="text-gray-500 dark:text-gray-400 hover:text-grilli-gold transition-colors duration-200 cursor-pointer" />
                 </div>
               </div>
-              <div className="flex gap-x-2 p-2 rounded-md bg-white/5 dark:bg-gray-800/5 border border-white/10 dark:border-gray-700/10 shadow-sm">
+              <div className="flex items-center gap-x-2 p-2 rounded-md bg-white/5 dark:bg-gray-800/5 border border-white/10 dark:border-gray-700/10 shadow-sm">
                 <Image
-                  src="/visa.svg"
+                  src="/uploads/bca.svg"
                   width={50}
-                  height={50}
-                  alt="visa icon"
-                  className="w-auto h-auto"
+                  height={32}
+                  alt="BCA icon"
+                  className="h-8 w-auto"
                 />
                 <Image
-                  src="/mastercard.svg"
+                  src="/uploads/bri.svg"
                   width={50}
-                  height={50}
-                  alt="mastercard icon"
-                  className="h-auto w-auto"
+                  height={32}
+                  alt="BRI icon"
+                  className="h-8 w-auto"
                 />
                 <Image
-                  src="/ae.svg"
+                  src="/uploads/dana.svg"
                   width={50}
-                  height={50}
-                  alt="americal express icon"
-                  className="h-auto w-auto"
+                  height={32}
+                  alt="DANA icon"
+                  className="h-8 w-auto"
                 />
                 <Image
-                  src="/paypal.svg"
+                  src="/uploads/gopay.svg"
                   width={50}
-                  height={50}
-                  alt="paypal icon"
-                  className="w-auto h-auto"
+                  height={32}
+                  alt="Gopay icon"
+                  className="h-8 w-auto"
                 />
                 <Image
-                  src="/dinersclub.svg"
+                  src="/uploads/mandiri.svg"
                   width={50}
-                  height={50}
-                  alt="diners club icon"
-                  className="h-auto w-auto"
-                />
-                <Image
-                  src="/discover.svg"
-                  width={50}
-                  height={50}
-                  alt="discover icon"
-                  className="h-auto w-auto"
+                  height={32}
+                  alt="Mandiri icon"
+                  className="h-8 w-auto"
                 />
               </div>
             </div>
